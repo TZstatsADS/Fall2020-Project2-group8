@@ -5,8 +5,7 @@ library(lubridate)
 original_wd<-getwd()
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
-#Oxford dataset has policy information for each state
-#Oxford policy dataset has all the data from January 1st to today in a single csv
+#Oxford dataset has policy information for each state from January 1st to today in a single csv
 states_policy<-read_csv('../data/Oxford Data/data/OxCGRT_US_latest.csv')
 states_policy<-states_policy%>%
   filter(!is.na(RegionName))%>%
@@ -15,18 +14,19 @@ states_policy$Date<-ymd(as.character(states_policy$Date))
 
 
 
-#JHU dataset has covid statistics like death rate, incident rate, test rate, etc
+#JHU dataset has covid statistics for each state like death rate, incident rate, test rate, etc
 #JHU dataset has one csv per day so we need to merge them all into one tibble
 csv_names<-list.files('../data/JHU Data/csse_covid_19_data/csse_covid_19_daily_reports_us')
 num_csv_names<-length(csv_names)-1 #-1 is to exclude readme file
 csv_names<-csv_names[1:num_csv_names] #exclude readme
-daily_report_list<-vector(mode="list",length=num_csv_names)
 
-for(i in 1:num_csv_names) #To Do: use map or lapply instead of for loop since this takes a few seconds to run
+create_report_list<-function(i)
 {
   daily_report<-read_csv(paste0('../data/JHU Data/csse_covid_19_data/csse_covid_19_daily_reports_us/',csv_names[i]))
-  daily_report_list[i]<-list(daily_report)
+  return(list(daily_report))
 }
+
+daily_report_list<-map(as.list(c(1:num_csv_names)),create_report_list)
 
 #bind the daily reports by row to create a single tibble called states_covid_stats
 states_covid_stats<-reduce(daily_report_list,bind_rows)
