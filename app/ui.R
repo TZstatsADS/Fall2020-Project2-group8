@@ -14,6 +14,7 @@ library(shinyWidgets)
 library(wordcloud2)
 library(DT)
 
+load('../output/states_complete.RData')
 
 dashboardPage(
   skin = "purple", #we don't have to use these colors, titles, and icons
@@ -37,7 +38,11 @@ dashboardPage(
     
     
     #report --------------------------------------------------------------------------------------------------------
-    tabItem(tabName = "Report"
+    tabItem(tabName = "Report",
+            selectInput(inputId="state_dropdown",label='Select State',
+                        choices=unique(states_complete$State)),
+            selectInput(inputId='policy_dropdown',label='Select Policy',
+                        choices=colnames(states_complete)[16:58][!endsWith(colnames(states_complete)[16:60],'Notes') & !endsWith(colnames(states_complete)[16:60],'Flag')][1:17])
     )
     #report end --------------------------------------------------------------------------------------------------------
   )
