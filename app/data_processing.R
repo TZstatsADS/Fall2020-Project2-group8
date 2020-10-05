@@ -62,11 +62,11 @@ colnames(US_confirmed)[12:length(colnames(US_confirmed))]<-date_numeric
 US_confirmed<-pivot_longer(US_confirmed,cols=as.character(date_numeric[1]:date_numeric[length(date_numeric)]),names_to='Date',values_to='Confirmed')%>%
   mutate(Date=as.Date(as.numeric(Date),origin='1970-01-01'))%>%
   rename(State=Province_State)%>%
+  filter(State %in% unique(states_policy$State))%>%
   filter(Date<'2020-04-12')%>%
   arrange(State)%>%
   group_by(State,Date)%>%
-  summarise(Confirmed=sum(Confirmed))%>%
-  filter(State %in% unique(states_policy$State))
+  summarise(Confirmed=sum(Confirmed))
 
 #convert the confirmed US deaths time series csv from wide to long so each (State,Date) pair is a row
 US_deaths<-read_csv('../data/JHU Data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
@@ -76,11 +76,11 @@ colnames(US_deaths)[13:length(colnames(US_deaths))]<-date_numeric
 US_deaths<-pivot_longer(US_deaths,cols=as.character(date_numeric[1]:date_numeric[length(date_numeric)]),names_to='Date',values_to='Deaths')%>%
   mutate(Date=as.Date(as.numeric(Date),origin='1970-01-01'))%>%
   rename(State=Province_State)%>%
+  filter(State %in% unique(states_policy$State))%>%
   filter(Date<'2020-04-12')%>%
   arrange(State)%>%
   group_by(State,Date)%>%
-  summarise(Deaths=sum(Deaths),Population=sum(Population))%>%
-  filter(State %in% unique(states_policy$State))
+  summarise(Deaths=sum(Deaths),Population=sum(Population))
 
 #join the confirmed cases tibble and deaths tibble
 jan_april_stats<-inner_join(US_confirmed,US_deaths,by=c('State','Date'))%>%
@@ -103,8 +103,6 @@ states_complete<-inner_join(states_covid_stats,states_policy,by=c("Date","State"
   select(-c(CountryCode,Country_Region,ISO3,CountryName,Jurisdiction,FIPS,Last_Update,RegionCode)) #Remove redundant columns
 
 save(states_complete,file="../output/states_complete.RData")
-setwd(original_wd) #set working directory to what it was originally
-
 write_csv(states_complete,"../output/states_complete.csv")
 
 
@@ -119,6 +117,9 @@ for (i in c(3,4,7:length(names(data)))){
   df_pivot <- df_temp %>% pivot_wider(names_from = `Date`,values_from = Colnames[i])
   write_csv(df_pivot,paste0("../output/",name_converted,".csv"))
 }
+
+setwd(original_wd) #set working directory to what it was originally
+
 
 
 
