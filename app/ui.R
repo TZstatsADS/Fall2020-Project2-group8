@@ -42,11 +42,13 @@ dashboardPage(
             fluidRow(column(12,
                             h3("Interactive Dashboard on State and Policy"),
                             "The following line plots show how the incident rate changes overtime and with certain policies being enforced")),
-            selectInput(inputId="state_dropdown",label='Select State',
-                        choices=unique(states_complete$State)),
+            pickerInput(inputId="state_dropdown",label='Select up to Three States',
+                        choices=unique(states_complete$State),multiple=TRUE,
+                        options=list(`max-options`=3,`none-selected-text`='Select at least one state'),
+                        selected='Alabama'),
             selectInput(inputId='policy_dropdown',label='Select Policy',
                         choices=colnames(states_complete)[16:58][!endsWith(colnames(states_complete)[16:60],'Notes') & !endsWith(colnames(states_complete)[16:60],'Flag')][1:17]),
-            plotOutput("plot")
+            plotlyOutput("plot")
     )
     #report end --------------------------------------------------------------------------------------------------------
   )

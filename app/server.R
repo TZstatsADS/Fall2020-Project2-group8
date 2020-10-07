@@ -27,20 +27,33 @@ shinyServer(function(input,output, session){
   
   #input$state_dropdown and input$policy_dropdown will give the values that the user inputted for the plot
   d <- reactive({
-    filtered <- 
-      states_complete %>%
-      filter(State == input$state_dropdown)
+    req(input$state_dropdown) #don't display plot if nothing is selected
+    filtered <- states_complete
+    if (length(input$state_dropdown)==1)
+    {
+      filtered%>%filter(State==input$state_dropdown)
+    }
+    else if (length(input$state_dropdown)==2)
+    {
+      filtered%>%filter(State==input$state_dropdown[1]|State==input$state_dropdown[2])
+    }
+    else
+    {
+      filtered%>%filter(State==input$state_dropdown[1]|State==input$state_dropdown[2]|State==input$state_dropdown[3])
+    }
+      
   }) 
   # Line Plot
-  output$plot=renderPlot({
-    ggplot(d(), aes(x=Date, y=Incident_Rate,color=factor(get(input$policy_dropdown)))) +
-      geom_line(size=2) + 
+  output$plot=renderPlotly({
+    ggplotly(ggplot(d(),aes(x=Date, y=Incident_Rate,color=factor(get(input$policy_dropdown)),label=State)) +
+      geom_point()+
+      geom_text(aes(label=ifelse(Date==max(Date),as.character(State),'')))+
       theme_bw() +
       xlab("Time") +
       ylab("Incident Rate") +
       ggtitle("Incident Rate Over Time")+
       scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"))+
-      labs(color="Choosen Policy")
+      labs(color="Chosen Policy"))
     })
   
   #report end --------------------------------------------------------------------------------------------------------
