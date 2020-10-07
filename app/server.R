@@ -28,44 +28,41 @@ shinyServer(function(input,output, session){
   #input$state_dropdown and input$policy_dropdown will give the values that the user inputted for the plot
   d <- reactive({
     req(input$state_dropdown) #don't display plot if nothing is selected
-    filtered <- states_complete
-    if (length(input$state_dropdown)==1)
-    {
-      filtered%>%filter(State==input$state_dropdown)
-    }
-    else if (length(input$state_dropdown)==2)
-    {
-      filtered%>%filter(State==input$state_dropdown[1]|State==input$state_dropdown[2])
-    }
-    else
-    {
-      filtered%>%filter(State==input$state_dropdown[1]|State==input$state_dropdown[2]|State==input$state_dropdown[3])
-    }
+    filtered <- states_complete%>%
+      filter(State%in%input$state_dropdown)
       
   }) 
   # Line Plot
   output$incident_rate_plot=renderPlotly({
-    ggplotly(ggplot(d(),aes(x=Date, y=Incident_Rate,color=factor(get(input$policy_dropdown)),label=State)) +
-      geom_point()+
-      geom_text(aes(label=ifelse(Date==max(Date),as.character(State),'')))+
-      theme_bw() +
-      xlab("Time") +
-      ylab("Incident Rate") +
-      ggtitle("Incident Rate Over Time")+
-      scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"))+
-      labs(color="Chosen Policy"))
+    ggplotly(ggplot(d(),aes(x=Date, y=Incident_Rate,color=factor(get(input$policy_dropdown)),group=factor(get(input$policy_dropdown)),label=State,
+                            text=paste('Date:',Date,
+                                       '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                       paste0('<br>',as.character(input$policy_dropdown),':'),factor(get(input$policy_dropdown)),
+                                       '<br>State:',State))) +
+              geom_point()+
+              theme_bw() +
+              xlab("Time") +
+              ylab("Incident Rate") +
+              ggtitle("Incident Rate Over Time")+
+              scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"))+
+              labs(color="Chosen Policy"),
+            tooltip='text')
     })
   
   output$mortality_rate_plot=renderPlotly({
-    ggplotly(ggplot(d(),aes(x=Date, y=Mortality_Rate,color=factor(get(input$policy_dropdown)),label=State)) +
+    ggplotly(ggplot(d(),aes(x=Date, y=Mortality_Rate,color=factor(get(input$policy_dropdown)),group=factor(get(input$policy_dropdown)),label=State,
+                            text=paste('Date:',Date,
+                                       '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                       paste0('<br>',as.character(input$policy_dropdown),':'),factor(get(input$policy_dropdown)),
+                                       '<br>State:',State))) +
                geom_point()+
-               geom_text(aes(label=ifelse(Date==max(Date),as.character(State),'')))+
                theme_bw() +
                xlab("Time") +
                ylab("Mortality Rate") +
                ggtitle("Mortality Rate Over Time")+
                scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"))+
-               labs(color="Chosen Policy"))
+               labs(color="Chosen Policy"),
+             tooltip='text')
   })
   
   #report end --------------------------------------------------------------------------------------------------------
