@@ -102,6 +102,80 @@ states_covid_stats<-bind_rows(jan_april_stats,states_covid_stats)%>%
 states_complete<-inner_join(states_covid_stats,states_policy,by=c("Date","State"))%>%
   select(-c(CountryCode,Country_Region,ISO3,CountryName,Jurisdiction,FIPS,Last_Update,RegionCode)) #Remove redundant columns
 
+# Recode the Policy variables
+states_complete = states_complete%>% 
+  mutate(
+    #Containment and closure policies
+    C1_School_closing = factor(case_when(
+      `C1_School closing` == 0 ~ "0 - no measures",
+      `C1_School closing` == 1 ~ "1 - recommend closing",
+      `C1_School closing` == 2 ~ "2 - require closing (only some levels or categories, eg just high school, or just public schools)",
+      `C1_School closing` == 3 ~ "3 - require closing all levels")),
+    C2_Workplace_closing = factor(case_when(
+      `C2_Workplace closing` == 0 ~ "0 - no measures",
+      `C2_Workplace closing` == 1 ~ "1 - recommend closing (or recommend work from home)",
+      `C2_Workplace closing` == 2 ~ "2 - require closing (or work from home) for some sectors or categories of workers",
+      `C2_Workplace closing` == 3 ~ "3 - require closing (or work from home) for all-but-essential workplaces (eg grocery stores, doctors)")),
+    C3_Cancel_public_events	 = factor(case_when(
+      `C3_Cancel public events` == 0 ~ "0 - no measures",
+      `C3_Cancel public events` == 1 ~ "1 - recommend cancelling",
+      `C3_Cancel public events` == 2 ~ "2 - require cancelling")),
+    C4_Restrictions_on_gatherings = factor(case_when(
+      `C4_Restrictions on gatherings` == 0 ~ "0 - no measures",
+      `C4_Restrictions on gatherings` == 1 ~ "1 - restrictions on very large gatherings (the limit is above 1000 people)",
+      `C4_Restrictions on gatherings` == 2 ~ "2 - restrictions on gatherings between 101-1000 people",
+      `C4_Restrictions on gatherings` == 3 ~ "3 - restrictions on gatherings between 11-100 people",
+      `C4_Restrictions on gatherings` == 4 ~ "4 - restrictions on gatherings of 10 people or less")),
+    C5_Close_public_transport = factor(case_when(
+      `C5_Close public transport` == 0 ~ "0 - no measures",
+      `C5_Close public transport` == 1 ~ "1 - recommend closing (or significantly reduce volume/route/means of transport available)",
+      `C5_Close public transport` == 2 ~ "2 - require closing (or prohibit most citizens from using it)")),
+    C6_Stay_at_home_requirements = factor(case_when(
+      `C6_Stay at home requirements` == 0 ~ "0 - no measures",
+      `C6_Stay at home requirements` == 1 ~ "1 - recommend not leaving house",
+      `C6_Stay at home requirements` == 2 ~ "2 - require not leaving house with exceptions for daily exercise, grocery shopping, and 'essential' trips",
+      `C6_Stay at home requirements` == 3 ~ "3 - require not leaving house with minimal exceptions (eg allowed to leave once a week, or only one person can leave at a time, etc)")),
+    C7_Restrictions_on_internal_movement = factor(case_when(
+      `C7_Restrictions on internal movement` == 0 ~ "0 - no measures",
+      `C7_Restrictions on internal movement` == 1 ~ "1 - recommend not to travel between regions/cities",
+      `C7_Restrictions on internal movement` == 2 ~ "2 - internal movement restrictions in place")),
+    C8_International_travel_controls = factor(case_when(
+      `C8_International travel controls` == 0 ~ "0 - no measures",
+      `C8_International travel controls` == 1 ~ "1 - screening arrivals",
+      `C8_International travel controls` == 2 ~ "2 - quarantine arrivals from some or all regions",
+      `C8_International travel controls` == 3 ~ "3 - ban arrivals from some regions",
+      `C8_International travel controls` == 4 ~ "4 - ban on all regions or total border closure")),
+    #Economic policies
+    E1_Income_support = factor(case_when(
+      `E1_Income support` == 0 ~ "0 - no income support",
+      `E1_Income support` == 1 ~ "1 - government is replacing less than 50% of lost salary (or if a flat sum, it is less than 50% median salary)",
+      `E1_Income support` == 2 ~ "2 - government is replacing 50% or more of lost salary (or if a flat sum, it is greater than 50% median salary)")),
+    E2_Debt_contract_relief = factor(case_when(
+      `E2_Debt/contract relief` == 0 ~ "0 - no debt/contract relief",
+      `E2_Debt/contract relief` == 1 ~ "1 - narrow relief, specific to one kind of contract",
+      `E2_Debt/contract relief` == 2 ~ "2 - broad debt/contract relief")),
+    E3_Fiscal_measures = `E3_Fiscal measures`, # didn't recode this part bc Record monetary value in USD of fiscal stimuli, includes any spending or tax cuts NOT included in E4, H4 or H5
+    E4_International_support= `E4_International support` ,# Record monetary value in USD
+    # Health system policies
+    H1_Public_information_campaigns = factor(case_when(
+      `H1_Public information campaigns` == 0 ~ "0 - no Covid-19 public information campaign",
+      `H1_Public information campaigns` == 1 ~ "1 - public officials urging caution about Covid-19",
+      `H1_Public information campaigns` == 2 ~ "2- coordinated public information campaign (eg across traditional and social media)")),
+    H2_Testing_policy = factor(case_when(
+      `H2_Testing policy` == 0 ~ "0 - no testing policy",
+      `H2_Testing policy` == 1 ~ "1 - only those who both (a) have symptoms AND (b) meet specific criteria (eg key workers, admitted to hospital, came into contact with a known case, returned from overseas)",
+      `H2_Testing policy` == 2 ~ "2 - testing of anyone showing Covid-19 symptoms",
+      `H2_Testing policy` == 3 ~ "3 - open public testing (eg drive through testing available to asymptomatic people)")),
+    H3_Contact_tracing	 = factor(case_when(
+      `H3_Contact tracing` == 0 ~ "0 - no contact tracing",
+      `H3_Contact tracing` == 1 ~ "1 - limited contact tracing; not done for all cases",
+      `H3_Contact tracing` == 2 ~ "2 - comprehensive contact tracing; done for all identified cases")),
+    H4_Emergency_investment_in_healthcare = `H4_Emergency investment in healthcare`, # Record monetary value in USD
+    H5_Investment_in_vaccines = `H5_Investment in vaccines` #Record monetary value in USD
+  )
+
+
+
 save(states_complete,file="../output/states_complete.RData")
 write_csv(states_complete,"../output/states_complete.csv")
 
