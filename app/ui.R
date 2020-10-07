@@ -48,7 +48,8 @@ dashboardPage(
                         selected='Alabama'),
             selectInput(inputId='policy_dropdown',label='Select Policy',
                         choices=colnames(states_complete)[16:58][!endsWith(colnames(states_complete)[16:60],'Notes') & !endsWith(colnames(states_complete)[16:60],'Flag')][1:17]),
-            plotlyOutput("plot")
+            plotlyOutput("incident_rate_plot"),
+            plotlyOutput("mortality_rate_plot")
     )
     #report end --------------------------------------------------------------------------------------------------------
   )

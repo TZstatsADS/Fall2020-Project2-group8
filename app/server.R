@@ -44,7 +44,7 @@ shinyServer(function(input,output, session){
       
   }) 
   # Line Plot
-  output$plot=renderPlotly({
+  output$incident_rate_plot=renderPlotly({
     ggplotly(ggplot(d(),aes(x=Date, y=Incident_Rate,color=factor(get(input$policy_dropdown)),label=State)) +
       geom_point()+
       geom_text(aes(label=ifelse(Date==max(Date),as.character(State),'')))+
@@ -55,6 +55,18 @@ shinyServer(function(input,output, session){
       scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"))+
       labs(color="Chosen Policy"))
     })
+  
+  output$mortality_rate_plot=renderPlotly({
+    ggplotly(ggplot(d(),aes(x=Date, y=Mortality_Rate,color=factor(get(input$policy_dropdown)),label=State)) +
+               geom_point()+
+               geom_text(aes(label=ifelse(Date==max(Date),as.character(State),'')))+
+               theme_bw() +
+               xlab("Time") +
+               ylab("Mortality Rate") +
+               ggtitle("Mortality Rate Over Time")+
+               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"))+
+               labs(color="Chosen Policy"))
+  })
   
   #report end --------------------------------------------------------------------------------------------------------
   
