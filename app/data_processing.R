@@ -178,7 +178,12 @@ states_complete = states_complete%>%
       `H3_Contact tracing` == 2 ~ "2 - comprehensive contact tracing; done for all identified cases")),
     H4_Emergency_investment_in_healthcare = `H4_Emergency investment in healthcare`, # Record monetary value in USD
     H5_Investment_in_vaccines = `H5_Investment in vaccines` #Record monetary value in USD
-  )
+  )%>%
+  select(-c(`C1_School closing`,`C2_Workplace closing`,`C3_Cancel public events`,`C4_Restrictions on gatherings`,
+            `C5_Close public transport`,`C6_Stay at home requirements`,`C7_Restrictions on internal movement`,
+            `C8_International travel controls`,`E1_Income support`,`E2_Debt/contract relief`,`E3_Fiscal measures`,
+            `E4_International support`,`H1_Public information campaigns`,`H2_Testing policy`,`H3_Contact tracing`,
+            `H4_Emergency investment in healthcare`,`H5_Investment in vaccines`))
 
 
 
@@ -270,7 +275,12 @@ county_complete = county_complete%>%
       `H3_Contact tracing` == 2 ~ "2 - comprehensive contact tracing; done for all identified cases")),
     H4_Emergency_investment_in_healthcare = `H4_Emergency investment in healthcare`, # Record monetary value in USD
     H5_Investment_in_vaccines = `H5_Investment in vaccines` #Record monetary value in USD
-  )
+  )%>%
+  select(-c(`C1_School closing`,`C2_Workplace closing`,`C3_Cancel public events`,`C4_Restrictions on gatherings`,
+            `C5_Close public transport`,`C6_Stay at home requirements`,`C7_Restrictions on internal movement`,
+            `C8_International travel controls`,`E1_Income support`,`E2_Debt/contract relief`,`E3_Fiscal measures`,
+            `E4_International support`,`H1_Public information campaigns`,`H2_Testing policy`,`H3_Contact tracing`,
+            `H4_Emergency investment in healthcare`,`H5_Investment in vaccines`))
 
 #writing to a csv takes about 30 seconds, and saving it as .RData takes 6 seconds
 #so try to only save/load using the counties RData file to save on runtime
