@@ -32,7 +32,20 @@ dashboardPage(
     
     
     #map --------------------------------------------------------------------------------------------------------
-    tabItem(tabName = "Map"
+    tabItem(tabName = "Map",
+            leafletOutput("map", width = "100%", height = "1200"),
+            absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
+                          top = 300, left = 20, right = "auto", bottom = "auto", width = 250, height = "auto",
+                          sliderInput('date_map','Input Date:',
+                                      #first day of data recording
+                                      min = as.Date(date_choices[1]),
+                                      #present day of data recording
+                                      max = as.Date(tail(date_choices,1)),
+                                      value = as.Date('2020-04-01','%Y-%m-%d'),
+                                      timeFormat = "%Y-%m-%d",
+                                      animate = TRUE, step = 5),
+                          style = "opacity: 0.80")
+            
     ),
     #map end --------------------------------------------------------------------------------------------------------
     

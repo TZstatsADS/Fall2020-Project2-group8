@@ -293,7 +293,7 @@ data <- states_complete
 Colnames <- names(data)
 
 for (i in c(3,4,7:length(names(data)))){
-  df_temp <- data[,c(1:2,5:6,i)]
+  df_temp <- data[,c(1:2,i)]
   name_temp <- str_split(Colnames[i], "/")
   name_converted <- reduce(unlist(name_temp),paste0)
   df_pivot <- df_temp %>% pivot_wider(names_from = `Date`,values_from = Colnames[i])
@@ -301,8 +301,4 @@ for (i in c(3,4,7:length(names(data)))){
 }
 
 setwd(original_wd) #set working directory to what it was originally
-
-
-
-
 

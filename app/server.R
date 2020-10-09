@@ -16,9 +16,65 @@ library(tidyverse)
 library(dplyr)
 library(tibble)
 
+#---------------------------------------Loading the processed data---------------------------------------------
+load('../output/states_complete.RData')
+source("global.R")
+
 shinyServer(function(input,output, session){
-  load('../output/states_complete.RData')
   #map --------------------------------------------------------------------------------------------------------
+  
+  
+  output$map <- renderLeaflet({
+    # Use leaflet() here, and only include aspects of the map that
+    # won't need to change dynamically (at least, not unless the
+    # entire map is being torn down and recreated).
+    map <- leaflet(states) %>%
+      setView(-96, 37.8, 4) %>%
+      addTiles()
+    
+  })
+  
+  observe({
+    if(!is.null(input$date_map)){
+      select_date <- format.Date(input$date_map,'%Y-%m-%d')
+    }
+    
+    
+    confirmed_at_today <- Confirmed %>% dplyr::select(State,select_date)
+    confirmed_with_order <- data.frame(State = states$NAME) %>% left_join(confirmed_at_today)
+    confirmed_number <- as.numeric(unlist(confirmed_with_order[select_date]))
+    
+    bins <- c(0,exp(0:as.integer(log(max(confirmed_number,na.rm = TRUE)))),Inf)
+    map_pal <- colorBin("YlOrRd", domain = states$STATE, bins = bins)
+    states$STATE <- confirmed_number
+    
+    labels <- sprintf(
+      "<strong>%s</strong><br/>%g people confirmed",
+      states$NAME, states$STATE
+    ) %>% lapply(htmltools::HTML)
+    
+    leafletProxy("map", data = states)%>%
+      addPolygons(
+        fillColor = ~map_pal(STATE),
+        weight = 2,
+        opacity = 1,
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        highlight = highlightOptions(
+          weight = 5,
+          color = "#666",
+          dashArray = "",
+          fillOpacity = 0.7,
+          bringToFront = TRUE),
+        label = labels,
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto")) 
+    
+  })
+  
   
   #map end --------------------------------------------------------------------------------------------------------
   
