@@ -1,3 +1,4 @@
+library(readr)
 Confirmed <- read_csv("../output/Confirmed.csv")
 Deaths <- read_csv("../output/Deaths.csv")
 date_choices <- names(Confirmed)[-1]

@@ -4,15 +4,21 @@ if(length(packages.needed) > 0)
 {
   install.packages(packages.needed, dependencies = TRUE)
 }
-
+library(dplyr)
+library(DT)
+library(leaflet)
 library(plotly)
-library(shinythemes)
+library(readr)
 library(shiny)
 library(shinydashboard)
-library(leaflet)
+library(shinythemes)
 library(shinyWidgets)
+library(stringr)
+library(tibble)
+library(tidyverse)
 library(wordcloud2)
-library(DT)
+
+
 
 load('../output/states_complete.RData')
 
