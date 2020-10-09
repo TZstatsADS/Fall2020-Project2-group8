@@ -203,7 +203,13 @@ county_covid_stats<-inner_join(US_confirmed_counties,US_deaths_counties)%>%
   rename(County=Admin2)
 
 county_complete<-inner_join(county_covid_stats,states_policy)%>%
-  select(-c(CountryCode,RegionCode,Jurisdiction,CountryName))
+  select(-c(CountryCode,RegionCode,Jurisdiction,CountryName))%>%
+  #only a few rows have infinite mortality rate and they're caused by having counts of deaths without
+  #counts of confirmed so in this case we just let mortality rate be 0 as their preceding mortality rate is 0
+  mutate(Mortality_Rate=ifelse(!is.na(Mortality_Rate)&is.finite(Mortality_Rate),Mortality_Rate,0))%>%
+  #remove rows with 0 population (rows with 0 population are unusable as they all have lat=long=0 
+  #and are labeled as 'Unassigned' or 'Out of State' counties with the exception of three counties in Utah and one county in Massachusetts)
+  filter(Population!=0)
 
 #Recode policy variables
 county_complete = county_complete%>% 
