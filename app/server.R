@@ -32,6 +32,59 @@ shinyServer(function(input,output, session){
     map <- leaflet(states) %>%
       setView(-96, 37.8, 4) %>%
       addTiles()
+
+  })
+
+  observe({
+    if(!is.null(input$date_map)){
+      select_date <- format.Date(input$date_map,'%Y-%m-%d')
+    }
+
+
+    confirmed_at_today <- Confirmed %>% dplyr::select(State,select_date)
+    confirmed_with_order <- data.frame(State = states$NAME) %>% left_join(confirmed_at_today)
+    confirmed_number <- as.numeric(unlist(confirmed_with_order[select_date]))
+
+    bins <- c(0,exp(0:as.integer(log(max(confirmed_number,na.rm = TRUE)))),Inf)
+    map_pal <- colorBin("YlOrRd", domain = states$STATE, bins = bins)
+    states$STATE <- confirmed_number
+
+    labels <- sprintf(
+      "<strong>%s</strong><br/>%g people confirmed",
+      states$NAME, states$STATE
+    ) %>% lapply(htmltools::HTML)
+
+    leafletProxy("map", data = states)%>%
+      addPolygons(
+        fillColor = ~map_pal(STATE),
+        weight = 2,
+        opacity = 1,
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        highlight = highlightOptions(
+          weight = 5,
+          color = "#666",
+          dashArray = "",
+          fillOpacity = 0.7,
+          bringToFront = TRUE),
+        label = labels,
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "15px",
+          direction = "auto"))
+
+  })
+
+
+  
+  output$map2 <- renderLeaflet({
+    # Use leaflet() here, and only include aspects of the map that
+    # won't need to change dynamically (at least, not unless the
+    # entire map is being torn down and recreated).
+    map2 <- leaflet(states) %>%
+      setView(-96, 37.8, 4) %>%
+      addTiles()
     
   })
   
@@ -54,7 +107,7 @@ shinyServer(function(input,output, session){
       states$NAME, states$STATE
     ) %>% lapply(htmltools::HTML)
     
-    leafletProxy("map", data = states)%>%
+    leafletProxy("map2", data = states)%>%
       addPolygons(
         fillColor = ~map_pal(STATE),
         weight = 2,
@@ -76,7 +129,6 @@ shinyServer(function(input,output, session){
     
   })
   
-  
   #map end --------------------------------------------------------------------------------------------------------
   
   
@@ -92,25 +144,25 @@ shinyServer(function(input,output, session){
     #reorder factor levels alphabetically (maybe do this in data_processing.R instead)
     levels(filtered[[input$policy_dropdown]])<-levels(filtered[[input$policy_dropdown]])[order(levels(filtered[[input$policy_dropdown]]))]
     return(filtered)
-
+    
   }) 
   # Line Plot
   output$incident_rate_plot=renderPlotly({
     ggplotly(ggplot(d_state(),aes(x=Date, y=Incident_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),
-                            text=paste('Date:',Date,
-                                       '<br>Incident Rate:',format(round(Incident_Rate,3)),
-                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                       '<br>State:',State))) +
-              geom_point()+
-              theme_bw() +
-              xlab("Time") +
-              ylab("Incident Rate") +
-              ggtitle("Incident Rate Over Time")+
-              #scale_colour_brewer(palette='Blues',drop=FALSE)+
-              scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
-              labs(color=as.character(input$policy_dropdown)),
-            tooltip='text')
-    })
+                                  text=paste('Date:',Date,
+                                             '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                             '<br>State:',State))) +
+               geom_point()+
+               theme_bw() +
+               xlab("Time") +
+               ylab("Incident Rate") +
+               ggtitle("Incident Rate Over Time")+
+               #scale_colour_brewer(palette='Blues',drop=FALSE)+
+               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
+               labs(color=as.character(input$policy_dropdown)),
+             tooltip='text')
+  })
   
   output$mortality_rate_plot=renderPlotly({
     ggplotly(ggplot(d_state(),aes(x=Date, y=Mortality_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
@@ -130,10 +182,10 @@ shinyServer(function(input,output, session){
   
   output$testing_rate_plot=renderPlotly({
     ggplotly(ggplot(d_state(),aes(x=Date, y=Testing_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
-                            text=paste('Date:',Date,
-                                       '<br>Testing Rate:',format(round(Testing_Rate,3)),
-                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                       '<br>State:',State))) +
+                                  text=paste('Date:',Date,
+                                             '<br>Testing Rate:',format(round(Testing_Rate,3)),
+                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                             '<br>State:',State))) +
                geom_point()+
                theme_bw() +
                xlab("Time") +
@@ -160,7 +212,7 @@ shinyServer(function(input,output, session){
              tooltip='text')
   })
   
-
+  
   
   
   d_county <- reactive({
@@ -177,10 +229,10 @@ shinyServer(function(input,output, session){
   # Line Plot
   output$incident_rate_plot_2=renderPlotly({
     ggplotly(ggplot(d_county(),aes(x=Date, y=Incident_Rate,color=str_wrap(factor(get(input$policy_dropdown_2)),20),label=Combined_Key,
-                                  text=paste('Date:',Date,
-                                             '<br>Incident Rate:',format(round(Incident_Rate,3)),
-                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
-                                             '<br>County:',Combined_Key))) +
+                                   text=paste('Date:',Date,
+                                              '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                              str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                              '<br>County:',Combined_Key))) +
                geom_point()+
                theme_bw() +
                xlab("Time") +
@@ -193,10 +245,10 @@ shinyServer(function(input,output, session){
   
   output$mortality_rate_plot_2=renderPlotly({
     ggplotly(ggplot(d_county(),aes(x=Date, y=Mortality_Rate,color=str_wrap(factor(get(input$policy_dropdown_2)),20),label=Combined_Key,
-                                  text=paste('Date:',Date,
-                                             '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
-                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
-                                             '<br>County:',Combined_Key))) +
+                                   text=paste('Date:',Date,
+                                              '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                              str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                              '<br>County:',Combined_Key))) +
                geom_point()+
                theme_bw() +
                xlab("Time") +

@@ -28,11 +28,13 @@ dashboardPage(
   dashboardHeader(title = "Covid State Policy Tracker"),
   dashboardSidebar(sidebarMenu(
     menuItem("Home", tabName = "Home", icon = icon("dashboard")),
-    menuItem("Map", tabName = "Map", icon = icon("compass")),
+    menuItem("Map", tabName = "Map", icon = icon("compass"),startExpanded = TRUE,
+             menuSubItem("US Map",tabName="US_Map",icon=icon("globe-americas")), #find better icons
+             menuSubItem("State Map",tabName="State_Map",icon=icon("map-marked"))),
     menuItem("Report", tabName = "Report", icon = icon("chart-line"),startExpanded = TRUE,
              menuSubItem("State Comparison",tabName="State_Comparison",icon=icon("users")), #find better icons
              menuSubItem("County Comparison",tabName="County_Comparison",icon=icon("user"))
-             )
+    )
   )),
   dashboardBody(fill = FALSE,tabItems(
     #home --------------------------------------------------------------------------------------------------------
@@ -42,10 +44,14 @@ dashboardPage(
     
     
     #map --------------------------------------------------------------------------------------------------------
-    tabItem(tabName = "Map",
+    tabItem(tabName = "US_Map",
+            tags$div(id='my_div',
+                     class='my_class',
+                     selectInput(inputId='stats_dropdown',label='Select Covid-19 Statistics',
+                                 choices=c('Cases','Deaths'))),
             leafletOutput("map", width = "100%", height = "1200"),
             absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
-                          top = 300, left = 20, right = "auto", bottom = "auto", width = 250, height = "auto",
+                          top = 500, left = 260, right = "auto", bottom = "auto", width = 250, height = "auto",
                           sliderInput('date_map','Input Date:',
                                       #first day of data recording
                                       min = as.Date(date_choices[1]),
@@ -55,7 +61,31 @@ dashboardPage(
                                       timeFormat = "%Y-%m-%d",
                                       animate = TRUE, step = 5),
                           style = "opacity: 0.80")
-            
+    ),
+    
+    tabItem(tabName = "State_Map",
+            tags$div(id='my_div1',
+                     class='my_class',
+                     selectInput(inputId='map_state_dropdown',label='Select State',
+                                 choices=(states_complete%>%filter(Date=='2020-10-03'))$State)),
+            tags$div(id='my_div2',
+                     class='my_class',
+                     selectInput(inputId='stats_dropdown',label='Select Covid-19 Statistics',
+                                 choices=c('Cases','Deaths'))),
+            tags$style(type="text/css", '.my_class .selectize-control .selectize-dropdown {position: static !important;}'),
+            ## Wait for county map
+            leafletOutput("map2", width = "100%", height = "1200"),  
+            absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
+                          top = 510, left = 260, right = "auto", bottom = "auto", width = 250, height = "auto",
+                          sliderInput('date_map','Input Date:',
+                                      #first day of data recording
+                                      min = as.Date(date_choices[1]),
+                                      #present day of data recording
+                                      max = as.Date(tail(date_choices,1)),
+                                      value = as.Date('2020-04-01','%Y-%m-%d'),
+                                      timeFormat = "%Y-%m-%d",
+                                      animate = TRUE, step = 5),
+                          style = "opacity: 0.80")
     ),
     #map end --------------------------------------------------------------------------------------------------------
     
@@ -69,7 +99,7 @@ dashboardPage(
                         choices=unique(states_complete$State),multiple=TRUE,
                         options=list(`max-options`=3),
                         selected='Alabama'
-                        ),
+            ),
             selectInput(inputId='policy_dropdown',label='Select Policy',
                         choices=colnames(states_complete)[27:39]),
             plotlyOutput("incident_rate_plot"),
@@ -88,12 +118,12 @@ dashboardPage(
                         options=list(`max-options`=3),
                         selected='Autauga, Alabama',
                         width='fit'
-                        ),
+            ),
             selectInput(inputId='policy_dropdown_2',label='Select Policy',
                         choices=colnames(county_complete)[24:36]),
             plotlyOutput("incident_rate_plot_2"),
             plotlyOutput("mortality_rate_plot_2")
-            )
+    )
     #report end --------------------------------------------------------------------------------------------------------
   )
   )
