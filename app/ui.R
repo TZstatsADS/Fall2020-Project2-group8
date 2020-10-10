@@ -34,12 +34,68 @@ dashboardPage(
     menuItem("Report", tabName = "Report", icon = icon("chart-line"),startExpanded = TRUE,
              menuSubItem("State Comparison",tabName="State_Comparison",icon=icon("users")), #find better icons
              menuSubItem("County Comparison",tabName="County_Comparison",icon=icon("user"))
-    )
-  )),
+             )
+    )),
   dashboardBody(fill = FALSE,tabItems(
     #home --------------------------------------------------------------------------------------------------------
-    tabItem(tabName = "Home"
-    ),   
+    tabItem(tabName = "Home",
+            fluidPage(
+              fluidRow(
+                box(width = 15, title = "Introduction", status = "warning",
+                    solidHeader = TRUE, h3("Covid State Policy Tracker"),
+                    h4("By Zihan Chen, Xujie Ma, Rohan Uppuluri & Jiaqi Yuan"),
+                    h5("Covid-19 outbreaks affect every country in the world. However, the magnitude of the impacts varied among countries, as some of them have been successful in limiting the spreading of disease. There are many explanations of why some countries have less cases than others. One of the reasons is that the government policy response."),
+                    h5("In this project, we built a policy tracker (01/22/20 - 10/07/20) to look at how state governments responded to the evolving situation and how the Covid-19 situation changes with the controlling measures overtime.  In particular, we want to see how some key indicators (infection rate, mortality rate, positive test rate, hospitalization rate) changes as the state government is publishing corresponding containment and closure policies, health system policies, and economic policies. We used the JHU dataset, as well as the Oxford Coronavirus Government Response Tracker(OxCGRT)."))),
+              fluidRow(box(width = 15, title = "User Group", status = "warning",
+                           solidHeader = TRUE, h3("Why Did We Develop this Map?"),
+                           h5("We want to help policy makers to make more informed decisions. ")
+  
+                           )),
+              fluidRow(box(width = 15, title = "User Guide", status = "warning",
+                           solidHeader = TRUE, h3("What Does This Map Do?"),
+                           tags$div(tags$ul(
+                             tags$li("Map: This map contains 2 U.S. geological graph, one at state level and another at county level. Each graph records the cases and death. User can select the state, the Covid-19 Statistics and time point"),
+                             tags$li("Report : This part contains time series plot on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. User can select up to 3 states/counties at one time ")
+                           )))),
+              fluidRow(box(width = 15, title = "Policies and Covid-19 Measures", status = "warning",
+                           solidHeader = TRUE, h3("Policies and Covid-19 Measures"),
+                           h5("In this project, we have 3 main policy areas and 4 covid-19 measures"),
+                           
+                           h5("Policy Area 1: Containment and Closure Policies"),
+                           tags$div(tags$ul(
+                             tags$li("1. Closing of schools and universities"),
+                             tags$li("2. Closing of workplaces"),
+                             tags$li("3. Cancelling public events"),
+                             tags$li("4. Limits on private gatherings"),
+                             tags$li("5. Closing of public transport"),
+                             tags$li("6. Orders to shelter-in-place and otherwise confine to the home"),
+                             tags$li("7. Restrictions on internal movement between cities/regions"),
+                             tags$li("8. Restrictions on international travel for foreign travelers"))
+                             ),
+                           
+                           h5("Policy Area 2: Health System Policies"),
+                           tags$div(tags$ul(
+                             tags$li("1. Presence of public info campaigns"),
+                             tags$li("2. Government policy on who has access to testing (Note: this records policies about testing for current infection (PCR tests) not testing for immunity (antibody test))"),
+                             tags$li("3. Government policy on contact tracing after a positive diagnosis (Note: we are looking for policies that would identify all people potentially exposed to Covid-19; voluntary bluetooth apps are unlikely to achieve this)"),
+                             tags$li("4. Announced short term spending on healthcare system, eg hospitals, masks, etc. Note: only record amount additional to previously announced spending"),
+                             tags$li("5. Announced public spending on Covid-19 vaccine development Note: only record amount additional to previously announced spending"))
+                           ),
+                           
+                           h5("Policy Area 3:Economic Policies"),
+                           tags$div(tags$ul(
+                             tags$li("1. If the government is providing direct cash payments to people who lose their jobs or cannot work (Note: only includes payments to firms if explicitly linked to payroll/salaries)"),
+                             tags$li("2. If the government is freezing financial obligations for households (eg stopping loan repayments, preventing services like water from stopping, or banning evictions)"))
+                           ),
+                           
+                           h4("Covid-19 Measures"),
+                           tags$div(tags$ul(
+                             tags$li("1. Incidence Rate: cases per 100,000 persons"),
+                             tags$li("2. Mortality Rate: Number recorded deaths * 100/ Number confirmed cases"),
+                             tags$li("3. Testing_Rate: Total test results (positive + negative) per 100,000 persons"),
+                             tags$li("4. ospitalization_Rate: Total number hospitalized / Number cases"))
+                           )
+                           )))),
     #home end --------------------------------------------------------------------------------------------------------
     
     
@@ -126,5 +182,5 @@ dashboardPage(
     )
     #report end --------------------------------------------------------------------------------------------------------
   )
-  )
+)
 )
