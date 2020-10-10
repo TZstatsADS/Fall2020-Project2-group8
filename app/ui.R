@@ -48,18 +48,21 @@ dashboardPage(
                     h5("In this project, we built a policy tracker (01/22/20 - 10/07/20) to look at how state governments responded to the evolving situation and how the Covid-19 situation changes with the controlling measures overtime.  In particular, we want to see how some key indicators (infection rate, mortality rate, positive test rate, hospitalization rate) changes as the state government is publishing corresponding containment and closure policies, health system policies, and economic policies. We used the JHU dataset, as well as the Oxford Coronavirus Government Response Tracker(OxCGRT)."))),
               fluidRow(box(width = 15, title = "User Group", status = "warning",
                            solidHeader = TRUE, h3("Why Did We Develop this Map?"),
-                           h5("We want to help policy makers to make more informed decisions. ")
-  
-                           )),
+                           h5("Policy responses to Cover-19 are complex, context-specific and rapidly changing. Documenting the policies and the stringency can help policy makers to understand and assess government responses to Covid-19 over time. "),
+                           h5("Our project provides the interactive plot of state government policy and Covid-19 Statistics, and it could help to answer questions such as:"),
+                           tags$div(tags$ul(
+                             tags$li("1. How did policy stringency as the evolving situation"),
+                             tags$li("2. How Covid-19 statistics changed after policy stringency changed")
+                           )))),
               fluidRow(box(width = 15, title = "User Guide", status = "warning",
                            solidHeader = TRUE, h3("What Does This Map Do?"),
                            tags$div(tags$ul(
-                             tags$li("Map: This map contains 2 U.S. geological graph, one at state level and another at county level. Each graph records the cases and death. User can select the state, the Covid-19 Statistics and time point"),
+                             tags$li("Map: This map contains 2 U.S. geological graph, one at state level and another at county level. Each graph records the confirmed cases and death. User can select the state, the Covid-19 Statistics and time point"),
                              tags$li("Report : This part contains time series plot on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. User can select up to 3 states/counties at one time ")
                            )))),
-              fluidRow(box(width = 15, title = "Policies and Covid-19 Measures", status = "warning",
-                           solidHeader = TRUE, h3("Policies and Covid-19 Measures"),
-                           h5("In this project, we have 3 main policy areas and 4 covid-19 measures"),
+              fluidRow(box(width = 15, title = "Policies and Covid-19 statistics", status = "warning",
+                           solidHeader = TRUE, h3("What Policies and Covid-19 Statistics Are Included?"),
+                           h5("In this project, we have 3 main policy areas and 6 Covid-19 Statistics"),
                            
                            h5("Policy Area 1: Containment and Closure Policies"),
                            tags$div(tags$ul(
@@ -90,10 +93,12 @@ dashboardPage(
                            
                            h4("Covid-19 Measures"),
                            tags$div(tags$ul(
-                             tags$li("1. Incidence Rate: cases per 100,000 persons"),
-                             tags$li("2. Mortality Rate: Number recorded deaths * 100/ Number confirmed cases"),
-                             tags$li("3. Testing_Rate: Total test results (positive + negative) per 100,000 persons"),
-                             tags$li("4. ospitalization_Rate: Total number hospitalized / Number cases"))
+                             tags$li("1. Total Confirmed Cases"),
+                             tags$li("2. Total Number of Death"),
+                             tags$li("3. Incidence Rate: cases per 100,000 persons"),
+                             tags$li("4. Mortality Rate: Number recorded deaths * 100/ Number confirmed cases"),
+                             tags$li("5. Testing_Rate: Total test results (positive + negative) per 100,000 persons"),
+                             tags$li("6. ospitalization_Rate: Total number hospitalized / Number cases"))
                            )
                            )))),
     #home end --------------------------------------------------------------------------------------------------------
