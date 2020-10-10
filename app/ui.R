@@ -115,32 +115,34 @@ dashboardPage(
                                       max = as.Date(tail(date_choices,1)),
                                       value = as.Date('2020-04-01','%Y-%m-%d'),
                                       timeFormat = "%Y-%m-%d",
-                                      animate = TRUE, step = 5),
+                                      animate = TRUE, step = 3),
                           style = "opacity: 0.80")
     ),
     
     tabItem(tabName = "State_Map",
             tags$div(id='my_div1',
                      class='my_class',
-                     selectInput(inputId='map_state_dropdown',label='Select State',
-                                 choices=(states_complete%>%filter(Date=='2020-10-03'))$State)),
+                     selectInput(inputId='county_name',label='Select State',
+                                 choices=(states_complete%>%filter(Date=='2020-10-03'))$State,
+                                 selected = "New York", multiple = T)
+                                 ),
             tags$div(id='my_div2',
                      class='my_class',
-                     selectInput(inputId='stats_dropdown',label='Select Covid-19 Statistics',
+                     selectInput(inputId='county_stats_dropdown',label='Select Covid-19 Statistics',
                                  choices=c('Cases','Deaths'))),
             tags$style(type="text/css", '.my_class .selectize-control .selectize-dropdown {position: static !important;}'),
-            ## Wait for county map
-            leafletOutput("map2", width = "100%", height = "1200"),  
+            ## county map
+            leafletOutput("county_map", width = "100%", height = "1200"),  
             absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
                           top = 510, left = 260, right = "auto", bottom = "auto", width = 250, height = "auto",
-                          sliderInput('date_map','Input Date:',
+                          sliderInput('county_date_map','Input Date:',
                                       #first day of data recording
                                       min = as.Date(date_choices[1]),
                                       #present day of data recording
                                       max = as.Date(tail(date_choices,1)),
                                       value = as.Date('2020-04-01','%Y-%m-%d'),
                                       timeFormat = "%Y-%m-%d",
-                                      animate = TRUE, step = 5),
+                                      animate = TRUE, step = 3),
                           style = "opacity: 0.80")
     ),
     #map end --------------------------------------------------------------------------------------------------------
@@ -179,6 +181,8 @@ dashboardPage(
                         choices=colnames(county_complete)[24:36]),
             plotlyOutput("incident_rate_plot_2"),
             plotlyOutput("mortality_rate_plot_2")
+            
+            
     )
     #report end --------------------------------------------------------------------------------------------------------
   )
