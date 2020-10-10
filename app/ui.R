@@ -34,7 +34,8 @@ dashboardPage(
     menuItem("Report", tabName = "Report", icon = icon("chart-line"),startExpanded = TRUE,
              menuSubItem("State Comparison",tabName="State_Comparison",icon=icon("users")), #find better icons
              menuSubItem("County Comparison",tabName="County_Comparison",icon=icon("user"))
-             )
+             ),
+    menuItem("Reference", tabName = "Reference", icon = icon("th"))
     )),
   dashboardBody(fill = FALSE,tabItems(
     #home --------------------------------------------------------------------------------------------------------
@@ -188,8 +189,24 @@ dashboardPage(
             plotlyOutput("mortality_rate_plot_2")
             
             
-    )
+    ),
     #report end --------------------------------------------------------------------------------------------------------
+    tabItem(tabName = "Reference",
+            fluidPage(
+              fluidRow(
+                box(width = 15, title = "Raw Dataset", status = "warning",
+                    solidHeader = TRUE,"The raw dataset for this project is from",
+                    tags$a(href="https://github.com/OxCGRT/USA-covid-policy/tree/master/data","Oxford Covid-19 Government Response Tracker"),
+                    "and",
+                    tags$a(href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data","JHU CSSE COVID-19 Dataset")
+                    )),
+              fluidRow(
+                box(width = 15, title = "Project Code", status = "warning",
+                    solidHeader = TRUE,"The code for this project can be find on",
+                    tags$a(href="https://github.com/TZstatsADS/Fall2020-Project2-group8","our Github")
+                    ))
+            )
+    )
   )
 )
 )
