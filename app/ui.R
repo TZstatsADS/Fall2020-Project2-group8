@@ -21,6 +21,7 @@ library(wordcloud2)
 
 
 load('../output/states_complete.RData')
+load('../output/county_complete.RData')
 
 dashboardPage(
   skin = "purple", #we don't have to use these colors, titles, and icons
@@ -28,7 +29,10 @@ dashboardPage(
   dashboardSidebar(sidebarMenu(
     menuItem("Home", tabName = "Home", icon = icon("dashboard")),
     menuItem("Map", tabName = "Map", icon = icon("compass")),
-    menuItem("Report", tabName = "Report", icon = icon("pencil-ruler"))
+    menuItem("Report", tabName = "Report", icon = icon("chart-line"),startExpanded = TRUE,
+             menuSubItem("State Comparison",tabName="State_Comparison",icon=icon("users")), #find better icons
+             menuSubItem("County Comparison",tabName="County_Comparison",icon=icon("user"))
+             )
   )),
   dashboardBody(fill = FALSE,tabItems(
     #home --------------------------------------------------------------------------------------------------------
@@ -57,19 +61,39 @@ dashboardPage(
     
     
     #report --------------------------------------------------------------------------------------------------------
-    tabItem(tabName = "Report",
+    tabItem(tabName = "State_Comparison",
             fluidRow(column(12,
                             h3("Interactive Dashboard on State and Policy"),
                             "The following line plots show how the incident rate and mortality changes overtime and with certain policies being enforced")),
             pickerInput(inputId="state_dropdown",label='Select up to Three States',
                         choices=unique(states_complete$State),multiple=TRUE,
                         options=list(`max-options`=3),
-                        selected='Alabama'),
+                        selected='Alabama'
+                        ),
             selectInput(inputId='policy_dropdown',label='Select Policy',
-                        choices=colnames(states_complete)[56:72]),
+                        choices=colnames(states_complete)[27:39]),
             plotlyOutput("incident_rate_plot"),
-            plotlyOutput("mortality_rate_plot")
-    )
+            plotlyOutput("mortality_rate_plot"),
+            plotlyOutput("testing_rate_plot"),
+            plotlyOutput("hospitalization_rate_plot")
+    ),
+    
+    tabItem(tabName="County_Comparison",
+            fluidRow(column(12,
+                            h3("Interactive Dashboard on County and Policy"),
+                            "The following line plots show how the incident rate and mortality changes overtime and with certain policies being enforced")),
+            pickerInput(inputId="county_dropdown",label='Select up to Three Counties',
+                        choices=split((county_complete%>%filter(Date=='2020-10-03'))$Combined_Key,(county_complete%>%filter(Date=='2020-10-03'))$State),
+                        multiple=TRUE,
+                        options=list(`max-options`=3),
+                        selected='Autauga, Alabama',
+                        width='fit'
+                        ),
+            selectInput(inputId='policy_dropdown_2',label='Select Policy',
+                        choices=colnames(county_complete)[24:36]),
+            plotlyOutput("incident_rate_plot_2"),
+            plotlyOutput("mortality_rate_plot_2")
+            )
     #report end --------------------------------------------------------------------------------------------------------
   )
   )

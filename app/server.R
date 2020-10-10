@@ -18,6 +18,7 @@ library(tibble)
 
 #---------------------------------------Loading the processed data---------------------------------------------
 load('../output/states_complete.RData')
+load('../output/county_complete.RData')
 source("global.R")
 
 shinyServer(function(input,output, session){
@@ -82,7 +83,7 @@ shinyServer(function(input,output, session){
   #report --------------------------------------------------------------------------------------------------------
   
   #input$state_dropdown and input$policy_dropdown will give the values that the user inputted for the plot
-  d <- reactive({
+  d_state <- reactive({
     req(input$state_dropdown) #don't display plot if nothing is selected
     
     filtered <- states_complete%>%
@@ -95,7 +96,7 @@ shinyServer(function(input,output, session){
   }) 
   # Line Plot
   output$incident_rate_plot=renderPlotly({
-    ggplotly(ggplot(d(),aes(x=Date, y=Incident_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
+    ggplotly(ggplot(d_state(),aes(x=Date, y=Incident_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),
                             text=paste('Date:',Date,
                                        '<br>Incident Rate:',format(round(Incident_Rate,3)),
                                        str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
@@ -105,17 +106,18 @@ shinyServer(function(input,output, session){
               xlab("Time") +
               ylab("Incident Rate") +
               ggtitle("Incident Rate Over Time")+
+              #scale_colour_brewer(palette='Blues',drop=FALSE)+
               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
               labs(color=as.character(input$policy_dropdown)),
             tooltip='text')
     })
   
   output$mortality_rate_plot=renderPlotly({
-    ggplotly(ggplot(d(),aes(x=Date, y=Mortality_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
-                            text=paste('Date:',Date,
-                                       '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
-                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                       '<br>State:',State))) +
+    ggplotly(ggplot(d_state(),aes(x=Date, y=Mortality_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
+                                  text=paste('Date:',Date,
+                                             '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                             '<br>State:',State))) +
                geom_point()+
                theme_bw() +
                xlab("Time") +
@@ -123,6 +125,85 @@ shinyServer(function(input,output, session){
                ggtitle("Mortality Rate Over Time")+
                scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
                labs(color=as.character(input$policy_dropdown)),
+             tooltip='text')
+  })
+  
+  output$testing_rate_plot=renderPlotly({
+    ggplotly(ggplot(d_state(),aes(x=Date, y=Testing_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
+                            text=paste('Date:',Date,
+                                       '<br>Testing Rate:',format(round(Testing_Rate,3)),
+                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                       '<br>State:',State))) +
+               geom_point()+
+               theme_bw() +
+               xlab("Time") +
+               ylab("Testing Rate") +
+               ggtitle("Testing Rate Over Time")+
+               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
+               labs(color=as.character(input$policy_dropdown)),
+             tooltip='text')
+  })
+  
+  output$hospitalization_rate_plot=renderPlotly({
+    ggplotly(ggplot(d_state(),aes(x=Date, y=Hospitalization_Rate,color=str_wrap(factor(get(input$policy_dropdown)),20),label=State,
+                                  text=paste('Date:',Date,
+                                             '<br>Hospitalization Rate:',format(round(Hospitalization_Rate,3)),
+                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                             '<br>State:',State))) +
+               geom_point()+
+               theme_bw() +
+               xlab("Time") +
+               ylab("Hospitalization Rate") +
+               ggtitle("Hospitalization Rate Over Time")+
+               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
+               labs(color=as.character(input$policy_dropdown)),
+             tooltip='text')
+  })
+  
+
+  
+  
+  d_county <- reactive({
+    req(input$county_dropdown) #don't display plot if nothing is selected
+    
+    filtered <- county_complete%>%
+      filter(Combined_Key%in%input$county_dropdown)
+    #filtered[[input$policy_dropdown_2]]<-factor(filtered[[input$policy_dropdown_2]],levels=unique(states_complete[[input$policy_dropdown]]))
+    #reorder factor levels alphabetically (maybe do this in data_processing.R instead)
+    levels(filtered[[input$policy_dropdown_2]])<-levels(filtered[[input$policy_dropdown_2]])[order(levels(filtered[[input$policy_dropdown_2]]))]
+    return(filtered)
+    
+  }) 
+  # Line Plot
+  output$incident_rate_plot_2=renderPlotly({
+    ggplotly(ggplot(d_county(),aes(x=Date, y=Incident_Rate,color=str_wrap(factor(get(input$policy_dropdown_2)),20),label=Combined_Key,
+                                  text=paste('Date:',Date,
+                                             '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                             '<br>County:',Combined_Key))) +
+               geom_point()+
+               theme_bw() +
+               xlab("Time") +
+               ylab("Incident Rate") +
+               ggtitle("Incident Rate Over Time")+
+               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
+               labs(color=as.character(input$policy_dropdown_2)),
+             tooltip='text')
+  })
+  
+  output$mortality_rate_plot_2=renderPlotly({
+    ggplotly(ggplot(d_county(),aes(x=Date, y=Mortality_Rate,color=str_wrap(factor(get(input$policy_dropdown_2)),20),label=Combined_Key,
+                                  text=paste('Date:',Date,
+                                             '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                             '<br>County:',Combined_Key))) +
+               geom_point()+
+               theme_bw() +
+               xlab("Time") +
+               ylab("Mortality Rate") +
+               ggtitle("Mortality Rate Over Time")+
+               scale_colour_manual(values = c("plum1", "plum2", "plum3","plum4","mediumorchid4"),drop=FALSE)+
+               labs(color=as.character(input$policy_dropdown_2)),
              tooltip='text')
   })
   
