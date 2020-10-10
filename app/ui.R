@@ -52,8 +52,8 @@ dashboardPage(
                            h5("Policy responses to Cover-19 are complex, context-specific and rapidly changing. Documenting the policies and the stringency can help policy makers to understand and assess government responses to Covid-19 over time. "),
                            h5("Our project provides the interactive plot of state government policy and Covid-19 Statistics, and it could help to answer questions such as:"),
                            tags$div(tags$ul(
-                             tags$li("1. How did policy stringency as the evolving situation"),
-                             tags$li("2. How Covid-19 statistics changed after policy stringency changed")
+                             tags$li("1. How did policy stringency change with the evolving situation"),
+                             tags$li("2. How Covid-19 statistics change after policy stringency change")
                            )))),
               fluidRow(box(width = 15, title = "User Guide", status = "warning",
                            solidHeader = TRUE, h3("What Does This Map Do?"),
