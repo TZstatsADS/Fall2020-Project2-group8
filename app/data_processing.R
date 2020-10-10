@@ -183,7 +183,12 @@ states_complete = states_complete%>%
             `C5_Close public transport`,`C6_Stay at home requirements`,`C7_Restrictions on internal movement`,
             `C8_International travel controls`,`E1_Income support`,`E2_Debt/contract relief`,`E3_Fiscal measures`,
             `E4_International support`,`H1_Public information campaigns`,`H2_Testing policy`,`H3_Contact tracing`,
-            `H4_Emergency investment in healthcare`,`H5_Investment in vaccines`))
+            `H4_Emergency investment in healthcare`,`H5_Investment in vaccines`,
+            C1_Flag,C1_Notes,C2_Flag,C2_Notes,C3_Flag,C3_Notes,C4_Flag,C4_Notes,
+            C5_Flag,C5_Notes,C6_Flag,C6_Notes,C7_Flag,C7_Notes,C8_Notes,E1_Flag,E1_Notes,
+            E2_Notes,E3_Notes,E4_Notes,H1_Flag,H1_Notes,H2_Notes,H3_Notes,H4_Notes,H5_Notes,
+            M1_Notes,M1_Wildcard,UID,E4_International_support,H4_Emergency_investment_in_healthcare,
+            H5_Investment_in_vaccines,E3_Fiscal_measures))
 
 
 
@@ -199,7 +204,8 @@ county_covid_stats<-inner_join(US_confirmed_counties,US_deaths_counties)%>%
   mutate(Incident_Rate=Confirmed/(Population/100000))%>% #Cases per 100k people
   mutate(Mortality_Rate=Deaths*100/Confirmed)%>%
   mutate(Mortality_Rate=ifelse(!is.na(Mortality_Rate),Mortality_Rate,0))%>%
-  select(-c(UID,iso2,iso3,code3,FIPS,Combined_Key,Country_Region))%>%
+  mutate(Combined_Key=str_sub(Combined_Key,end=-5))%>%
+  select(-c(UID,iso2,iso3,code3,FIPS,Country_Region))%>%
   rename(County=Admin2)
 
 county_complete<-inner_join(county_covid_stats,states_policy)%>%
@@ -286,7 +292,12 @@ county_complete = county_complete%>%
             `C5_Close public transport`,`C6_Stay at home requirements`,`C7_Restrictions on internal movement`,
             `C8_International travel controls`,`E1_Income support`,`E2_Debt/contract relief`,`E3_Fiscal measures`,
             `E4_International support`,`H1_Public information campaigns`,`H2_Testing policy`,`H3_Contact tracing`,
-            `H4_Emergency investment in healthcare`,`H5_Investment in vaccines`))
+            `H4_Emergency investment in healthcare`,`H5_Investment in vaccines`,
+            C1_Flag,C1_Notes,C2_Flag,C2_Notes,C3_Flag,C3_Notes,C4_Flag,C4_Notes,
+            C5_Flag,C5_Notes,C6_Flag,C6_Notes,C7_Flag,C7_Notes,C8_Notes,E1_Flag,E1_Notes,
+            E2_Notes,E3_Notes,E4_Notes,H1_Flag,H1_Notes,H2_Notes,H3_Notes,H4_Notes,H5_Notes,
+            M1_Notes,M1_Wildcard,E4_International_support,H4_Emergency_investment_in_healthcare,
+            H5_Investment_in_vaccines,E3_Fiscal_measures))
 
 #writing to a csv takes about 30 seconds, and saving it as .RData takes 6 seconds
 #so try to only save/load using the counties RData file to save on runtime
