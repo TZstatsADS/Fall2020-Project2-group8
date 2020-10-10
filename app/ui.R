@@ -24,7 +24,7 @@ load('../output/states_complete.RData')
 load('../output/county_complete.RData')
 
 dashboardPage(
-  skin = "purple", #we don't have to use these colors, titles, and icons
+  skin = "blue", #we don't have to use these colors, titles, and icons
   dashboardHeader(title = "Covid State Policy Tracker"),
   dashboardSidebar(sidebarMenu(
     menuItem("Home", tabName = "Home", icon = icon("dashboard")),
@@ -42,12 +42,12 @@ dashboardPage(
     tabItem(tabName = "Home",
             fluidPage(
               fluidRow(
-                box(width = 15, title = "Introduction", status = "warning",
+                box(width = 15, title = "Introduction", status = "primary",
                     solidHeader = TRUE, h3("Covid State Policy Tracker"),
                     h4("By Zihan Chen, Xujie Ma, Rohan Uppuluri & Jiaqi Yuan"),
                     h5("Covid-19 outbreaks affect every country in the world. However, the magnitude of the impacts varied among countries, as some of them have been successful in limiting the spreading of disease. There are many explanations of why some countries have less cases than others. One of the reasons is that the government policy response."),
                     h5("In this project, we built a policy tracker (01/22/20 - 10/07/20) to look at how state governments responded to the evolving situation and how the Covid-19 situation changes with the controlling measures overtime.  In particular, we want to see how some key indicators (infection rate, mortality rate, positive test rate, hospitalization rate) changes as the state government is publishing corresponding containment and closure policies, health system policies, and economic policies. We used the JHU dataset, as well as the Oxford Coronavirus Government Response Tracker(OxCGRT)."))),
-              fluidRow(box(width = 15, title = "User Group", status = "warning",
+              fluidRow(box(width = 15, title = "User Group", status = "primary",
                            solidHeader = TRUE, h3("Why Did We Develop this Map?"),
                            h5("Policy responses to Cover-19 are complex, context-specific and rapidly changing. Documenting the policies and the stringency can help policy makers to understand and assess government responses to Covid-19 over time. "),
                            h5("Our project provides the interactive plot of state government policy and Covid-19 Statistics, and it could help to answer questions such as:"),
@@ -55,13 +55,13 @@ dashboardPage(
                              tags$li("1. How did policy stringency change with the evolving situation"),
                              tags$li("2. How Covid-19 statistics change after policy stringency change")
                            )))),
-              fluidRow(box(width = 15, title = "User Guide", status = "warning",
+              fluidRow(box(width = 15, title = "User Guide", status = "primary",
                            solidHeader = TRUE, h3("What Does This Map Do?"),
                            tags$div(tags$ul(
                              tags$li("Map: This map contains 2 U.S. geological graph, one at state level and another at county level. Each graph records the confirmed cases and death. User can select the state, the Covid-19 Statistics and time point"),
                              tags$li("Report : This part contains time series plot on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. User can select up to 3 states/counties at one time ")
                            )))),
-              fluidRow(box(width = 15, title = "Policies and Covid-19 statistics", status = "warning",
+              fluidRow(box(width = 15, title = "Policies and Covid-19 statistics", status = "primary",
                            solidHeader = TRUE, h3("What Policies and Covid-19 Statistics Are Included?"),
                            h5("In this project, we have 3 main policy areas and 6 Covid-19 Statistics"),
                            
@@ -194,14 +194,14 @@ dashboardPage(
     tabItem(tabName = "Reference",
             fluidPage(
               fluidRow(
-                box(width = 15, title = "Raw Dataset", status = "warning",
+                box(width = 15, title = "Raw Dataset", status = "primary",
                     solidHeader = TRUE,"The raw dataset for this project is from",
                     tags$a(href="https://github.com/OxCGRT/USA-covid-policy/tree/master/data","Oxford Covid-19 Government Response Tracker"),
                     "and",
                     tags$a(href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data","JHU CSSE COVID-19 Dataset")
                     )),
               fluidRow(
-                box(width = 15, title = "Project Code", status = "warning",
+                box(width = 15, title = "Project Code", status = "primary",
                     solidHeader = TRUE,"The code for this project can be find on",
                     tags$a(href="https://github.com/TZstatsADS/Fall2020-Project2-group8","our Github")
                     ))
