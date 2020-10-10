@@ -98,8 +98,8 @@ dashboardPage(
                              tags$li("2. Total Number of Death"),
                              tags$li("3. Incidence Rate: cases per 100,000 persons"),
                              tags$li("4. Mortality Rate: Number recorded deaths * 100/ Number confirmed cases"),
-                             tags$li("5. Testing_Rate: Total test results (positive + negative) per 100,000 persons"),
-                             tags$li("6. ospitalization_Rate: Total number hospitalized / Number cases"))
+                             tags$li("5. Testing Rate: Total test results (positive + negative) per 100,000 persons"),
+                             tags$li("6. Hospitalization Rate: Total number hospitalized / Number cases"))
                            )
                            )))),
     #home end --------------------------------------------------------------------------------------------------------
