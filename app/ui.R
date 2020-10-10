@@ -125,6 +125,8 @@ dashboardPage(
                         choices=colnames(county_complete)[24:36]),
             plotlyOutput("incident_rate_plot_2"),
             plotlyOutput("mortality_rate_plot_2")
+            
+            
     )
     #report end --------------------------------------------------------------------------------------------------------
   )
