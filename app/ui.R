@@ -205,7 +205,7 @@ dashboardPage(
                     )),
               fluidRow(
                 box(width = 15, title = "Project Code", status = "primary",
-                    solidHeader = TRUE,"The code for this project can be find on",
+                    solidHeader = TRUE,"The code for this project can be found on",
                     tags$a(href="https://github.com/TZstatsADS/Fall2020-Project2-group8","our Github")
                     ))
             )
