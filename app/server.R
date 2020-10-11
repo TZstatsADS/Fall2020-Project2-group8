@@ -212,71 +212,112 @@ shinyServer(function(input,output, session){
     
   }) 
   # Line Plot
-  output$incident_rate_plot=renderPlotly({
-    ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Incident_Rate,color=str_wrap(factor((State_Policy)),20),
-                                  text=paste('Date:',Date,
-                                             '<br>Incident Rate:',format(round(Incident_Rate,3)),
-                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                             '<br>State:',State))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Incident Rate") +
-               ggtitle("Incident Rate Over Time")+
-               #scale_colour_brewer(palette=ifelse(),drop=FALSE)+
-               scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown)),
-             tooltip='text')
+  output$state_line_plot=renderPlotly({
+    p1<-ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Incident_Rate,color=str_wrap(factor((State_Policy)),20),
+                                           text=paste('Date:',Date,
+                                                      '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                                      str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                                      '<br>State:',State)))+
+                   geom_point()+
+                   theme_bw() +
+                   xlab("Time") +
+                   ylab("Incident Rate") +
+                   scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
+                   theme(legend.title = element_blank())+
+                   labs(color=as.character(input$policy_dropdown)),
+                 tooltip='text')%>%
+      add_annotations(
+        text = "Incident Rate Over Time",
+        x = 0,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 20,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    p2<-ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Mortality_Rate,color=str_wrap(factor((State_Policy)),20),label=State,
+                                           text=paste('Date:',Date,
+                                                      '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                                      str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                                      '<br>State:',State)))+
+                   geom_point()+
+                   theme_bw() +
+                   xlab("Time") +
+                   ylab("Mortality Rate") +
+                   scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
+                   theme(legend.title = element_blank())+
+                   labs(color=as.character(input$policy_dropdown)),
+                 tooltip='text')%>%
+      add_annotations(
+        text = "Mortality Rate Over Time",
+        x = 0,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 20,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    p3<-ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Testing_Rate,color=str_wrap(factor((State_Policy)),20),label=State,
+                                           text=paste('Date:',Date,
+                                                      '<br>Testing Rate:',format(round(Testing_Rate,3)),
+                                                      str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                                      '<br>State:',State)))+
+                   geom_point()+
+                   theme_bw() +
+                   xlab("Time") +
+                   ylab("Testing Rate") +
+                   scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
+                   theme(legend.title = element_blank())+
+                   labs(color=as.character(input$policy_dropdown)),
+                 tooltip='text')%>%
+      add_annotations(
+        text = "Testing Rate Over Time",
+        x = 0,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 20,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    p4<-ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Hospitalization_Rate,color=str_wrap(factor((State_Policy)),20),label=State,
+                                           text=paste('Date:',Date,
+                                                      '<br>Hospitalization Rate:',format(round(Hospitalization_Rate,3)),
+                                                      str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
+                                                      '<br>State:',State)))+
+                   geom_point()+
+                   theme_bw() +
+                   xlab("Time") +
+                   ylab("Hospitalization Rate") +
+                   scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
+                   theme(legend.title = element_blank())+
+                   labs(color=as.character(input$policy_dropdown)),
+                 tooltip='text')%>%
+      add_annotations(
+        text = "Hospitalization Rate Over Time",
+        x = 0,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 20,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    
+    subplot(style(p1,showlegend=F),style(p2,showlegend=F),style(p3,showlegend=F),style(p4,showlegend=T),nrows=2,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
+      layout(paper_bgcolor='transparent')
+    
   })
-  
-  output$mortality_rate_plot=renderPlotly({
-    ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Mortality_Rate,color=str_wrap(factor((State_Policy)),20),label=State,
-                                  text=paste('Date:',Date,
-                                             '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
-                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                             '<br>State:',State))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Mortality Rate") +
-               ggtitle("Mortality Rate Over Time")+
-               scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown)),
-             tooltip='text')
-  })
-  
-  output$testing_rate_plot=renderPlotly({
-    ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Testing_Rate,color=str_wrap(factor((State_Policy)),20),label=State,
-                                  text=paste('Date:',Date,
-                                             '<br>Testing Rate:',format(round(Testing_Rate,3)),
-                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                             '<br>State:',State))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Testing Rate") +
-               ggtitle("Testing Rate Over Time")+
-               scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown)),
-             tooltip='text')
-  })
-  
-  output$hospitalization_rate_plot=renderPlotly({
-    ggplotly(ggplot(d_state()[[1]],aes(x=Date, y=Hospitalization_Rate,color=str_wrap(factor((State_Policy)),20),label=State,
-                                  text=paste('Date:',Date,
-                                             '<br>Hospitalization Rate:',format(round(Hospitalization_Rate,3)),
-                                             str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
-                                             '<br>State:',State))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Hospitalization Rate") +
-               ggtitle("Hospitalization Rate Over Time")+
-               scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown)),
-             tooltip='text')
-  })
-  
   
   
   

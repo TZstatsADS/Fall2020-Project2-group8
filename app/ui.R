@@ -24,15 +24,15 @@ load('../output/states_complete.RData')
 load('../output/county_complete.RData')
 
 dashboardPage(
-  skin = "blue", #we don't have to use these colors, titles, and icons
+  skin = "blue", 
   dashboardHeader(title = "Covid State Policy Tracker"),
   dashboardSidebar(sidebarMenu(
     menuItem("Home", tabName = "Home", icon = icon("dashboard")),
     menuItem("Map", tabName = "Map", icon = icon("compass"),startExpanded = TRUE,
-             menuSubItem("US Map",tabName="US_Map",icon=icon("globe-americas")), #find better icons
+             menuSubItem("US Map",tabName="US_Map",icon=icon("globe-americas")), 
              menuSubItem("State Map",tabName="State_Map",icon=icon("map-marked"))),
     menuItem("Report", tabName = "Report", icon = icon("chart-line"),startExpanded = TRUE,
-             menuSubItem("State Comparison",tabName="State_Comparison",icon=icon("users")), #find better icons
+             menuSubItem("State Comparison",tabName="State_Comparison",icon=icon("users")), 
              menuSubItem("County Comparison",tabName="County_Comparison",icon=icon("user"))
              ),
     menuItem("Reference", tabName = "Reference", icon = icon("th"))
@@ -166,10 +166,13 @@ dashboardPage(
             ),
             selectInput(inputId='policy_dropdown',label='Select Policy',
                         choices=colnames(states_complete)[27:39]),
-            plotlyOutput("incident_rate_plot"),
-            plotlyOutput("mortality_rate_plot"),
-            plotlyOutput("testing_rate_plot"),
-            plotlyOutput("hospitalization_rate_plot")
+            #plotlyOutput("incident_rate_plot"),
+            #plotlyOutput("mortality_rate_plot"),
+            #plotlyOutput("testing_rate_plot"),
+            #plotlyOutput("hospitalization_rate_plot"),
+            plotlyOutput("state_line_plot",height="800px",width="1500px"),
+            br(),
+            br()
     ),
     
     tabItem(tabName="County_Comparison",
