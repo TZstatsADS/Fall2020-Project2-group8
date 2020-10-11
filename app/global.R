@@ -10,8 +10,8 @@ library(tidyverse)
 library(lubridate)
 
 #set working directory to current file (To Do: find a better way to use relative paths)
-original_wd<-getwd()
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+#original_wd<-getwd()
+#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 
 #The Oxford dataset has policy information for each state from January 1 to today in a single csv
@@ -349,4 +349,4 @@ convert_xf1 <- function(str){
   return(reduce(unlist(str_split(str,'\xf1')),paste0))
 }
 
-setwd(original_wd) #set working directory to what it was originally
+#setwd(original_wd) #set working directory to what it was originally

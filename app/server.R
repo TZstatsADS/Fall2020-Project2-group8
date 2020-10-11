@@ -20,7 +20,6 @@ library(RColorBrewer)
 #---------------------------------------Loading the processed data---------------------------------------------
 load('../output/states_complete.RData')
 load('../output/county_complete.RData')
-source("global.R")
 
 shinyServer(function(input,output, session){
   #map --------------------------------------------------------------------------------------------------------
@@ -200,8 +199,6 @@ shinyServer(function(input,output, session){
       filter(State%in%input$state_dropdown)%>%
       mutate(State_Policy=paste(State,get(input$policy_dropdown),sep=": "))%>%
       mutate(State_Policy=factor(State_Policy))
-    #filtered[[input$policy_dropdown]]<-factor(filtered[[input$policy_dropdown]],levels=unique(states_complete[[input$policy_dropdown]]))
-    #reorder factor levels alphabetically (maybe do this in data_processing.R instead)
     levels(filtered$State_Policy)<-levels(filtered$State_Policy)[order(levels(filtered$State_Policy))]
     
     policy_lengths<-rle(unlist(map(strsplit(levels(filtered$State_Policy),'[:]'),1)))$lengths
@@ -328,7 +325,6 @@ shinyServer(function(input,output, session){
       filter(Combined_Key%in%input$county_dropdown)%>%
       mutate(County_Policy=paste(County,get(input$policy_dropdown_2),sep=": "))%>%
       mutate(County_Policy=factor(County_Policy))
-    #reorder factor levels alphabetically (maybe do this in data_processing.R instead)
     levels(filtered$County_Policy)<-levels(filtered$County_Policy)[order(levels(filtered$County_Policy))]
     
     policy_lengths<-rle(unlist(map(strsplit(levels(filtered$County_Policy),'[:]'),1)))$lengths
@@ -339,36 +335,62 @@ shinyServer(function(input,output, session){
     
   }) 
   # Line Plot
-  output$incident_rate_plot_2=renderPlotly({
-    ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Incident_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
-                                   text=paste('Date:',Date,
-                                              '<br>Incident Rate:',format(round(Incident_Rate,3)),
-                                              str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
-                                              '<br>County:',Combined_Key))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Incident Rate") +
-               ggtitle("Incident Rate Over Time")+
-               scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown_2)),
-             tooltip='text')
-  })
   
-  output$mortality_rate_plot_2=renderPlotly({
-    ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Mortality_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
-                                   text=paste('Date:',Date,
-                                              '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
-                                              str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
-                                              '<br>County:',Combined_Key))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Mortality Rate") +
-               ggtitle("Mortality Rate Over Time")+
-               scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown_2)),
-             tooltip='text')
+  output$county_line_plot=renderPlotly({
+    q1<-ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Incident_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
+                                          text=paste('Date:',Date,
+                                                     '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                                     str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                                     '<br>County:',Combined_Key))) +
+                 geom_point()+
+                 theme_bw() +
+                 xlab("Time") +
+                 ylab("Incident Rate") +
+                 scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
+                 theme(legend.title = element_blank())+
+                 labs(color=as.character(input$policy_dropdown_2)),
+               tooltip='text')%>%
+      add_annotations(
+        text = "Incident Rate Over Time",
+        x = 0,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 20,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    q2<-ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Mortality_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
+                                          text=paste('Date:',Date,
+                                                     '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                                     str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                                     '<br>County:',Combined_Key))) +
+                 geom_point()+
+                 theme_bw() +
+                 xlab("Time") +
+                 ylab("Mortality Rate") +
+                 scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
+                 theme(legend.title = element_blank())+
+                 labs(color=as.character(input$policy_dropdown_2)),
+               tooltip='text')%>%
+      add_annotations(
+        text = "Mortality Rate Over Time",
+        x = 0,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 20,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    
+    subplot(style(q1,showlegend=F),style(q2,showlegend=T),nrows=1,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
+      layout(paper_bgcolor='transparent')
+    
   })
   
   #report end --------------------------------------------------------------------------------------------------------
