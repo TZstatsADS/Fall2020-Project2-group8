@@ -215,7 +215,7 @@ shinyServer(function(input,output, session){
                                                       '<br>Incident Rate:',format(round(Incident_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Incident Rate") +
@@ -225,13 +225,13 @@ shinyServer(function(input,output, session){
                  tooltip='text')%>%
       add_annotations(
         text = "Incident Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -240,23 +240,26 @@ shinyServer(function(input,output, session){
                                                       '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Mortality Rate") +
-                   scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
-                   theme(legend.title = element_blank())+
-                   labs(color=as.character(input$policy_dropdown)),
+                   scale_colour_manual(str_wrap(as.character(input$policy_dropdown),8),values=d_state()[[2]],drop=FALSE)+
+                   labs(color=as.character(input$policy_dropdown))+
+                   theme(legend.title = element_blank()),
+                   #theme(legend.title = element_text(size=9))+
+                   #guides(colour=guide_legend(title=str_wrap(as.character(input$policy_dropdown),8),title.vjust = 0.5,title.position = "top",title.hjust=30,nrow=2)),
+                   #theme(legend.title = element_text(size=10,hjust=30,margin = margin(l=30,r=10)),legend.title.align=1),
                  tooltip='text')%>%
       add_annotations(
         text = "Mortality Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -265,7 +268,7 @@ shinyServer(function(input,output, session){
                                                       '<br>Testing Rate:',format(round(Testing_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Testing Rate") +
@@ -275,13 +278,13 @@ shinyServer(function(input,output, session){
                  tooltip='text')%>%
       add_annotations(
         text = "Testing Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -290,7 +293,7 @@ shinyServer(function(input,output, session){
                                                       '<br>Hospitalization Rate:',format(round(Hospitalization_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Hospitalization Rate") +
@@ -300,18 +303,18 @@ shinyServer(function(input,output, session){
                  tooltip='text')%>%
       add_annotations(
         text = "Hospitalization Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
     
-    subplot(style(p1,showlegend=F),style(p2,showlegend=F),style(p3,showlegend=F),style(p4,showlegend=T),nrows=2,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
+    subplot(style(p1,showlegend=F),style(p2,showlegend=T),style(p3,showlegend=F),style(p4,showlegend=F),nrows=2,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
       layout(paper_bgcolor='transparent')
     
   })
@@ -342,7 +345,7 @@ shinyServer(function(input,output, session){
                                                      '<br>Incident Rate:',format(round(Incident_Rate,3)),
                                                      str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
                                                      '<br>County:',Combined_Key))) +
-                 geom_point()+
+                 geom_point(size=1.25)+
                  theme_bw() +
                  xlab("Time") +
                  ylab("Incident Rate") +
@@ -352,13 +355,13 @@ shinyServer(function(input,output, session){
                tooltip='text')%>%
       add_annotations(
         text = "Incident Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -367,7 +370,7 @@ shinyServer(function(input,output, session){
                                                      '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
                                                      str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
                                                      '<br>County:',Combined_Key))) +
-                 geom_point()+
+                 geom_point(size=1.25)+
                  theme_bw() +
                  xlab("Time") +
                  ylab("Mortality Rate") +
@@ -377,13 +380,13 @@ shinyServer(function(input,output, session){
                tooltip='text')%>%
       add_annotations(
         text = "Mortality Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
