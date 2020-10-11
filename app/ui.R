@@ -179,6 +179,7 @@ dashboardPage(
             fluidRow(column(12,
                             h3("Interactive Dashboard on County and Policy"),
                             "The following line plots show how the incident rate and mortality changes overtime and with certain policies being enforced")),
+            br(),
             pickerInput(inputId="county_dropdown",label='Select up to Three Counties',
                         choices=split((county_complete%>%filter(Date=='2020-10-03'))$Combined_Key,(county_complete%>%filter(Date=='2020-10-03'))$State),
                         multiple=TRUE,
@@ -188,8 +189,9 @@ dashboardPage(
             ),
             selectInput(inputId='policy_dropdown_2',label='Select Policy',
                         choices=colnames(county_complete)[24:36]),
-            plotlyOutput("incident_rate_plot_2"),
-            plotlyOutput("mortality_rate_plot_2")
+            plotlyOutput("county_line_plot",height="400px",width="1500px"),
+            br(),
+            br()
             
             
     ),
