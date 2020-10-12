@@ -76,12 +76,10 @@ dashboardPage(
                                tags$li("1. Rhode Island: Not updating case, death, or recovered data on the weekends. Releasing county level cases and deaths once per week."),
                                tags$li("2. Conneticut: Not updating case, death, or recovered data on the weekends."),
                                tags$li("3. Illinois: Releasing probable cases once per week. "),
-                               tags$li("4. District of Columbia: Not updating on the weekends."),
-                               tags$li("5. Louisiana: Not updating on the weekends."),
-                               tags$li("6. Michigan: No case data provided for August 21."),
-                               tags$li("7. Kansas: No data for the weekend of August 22-23."),
-                               tags$li("8. Guam: Not reporting data on weekends."),
-                               tags$li("9. Michigan: Not providing death data on Sundays.")
+                               tags$li("4. Louisiana: Not updating on the weekends."),
+                               tags$li("5. Michigan: No case data provided for August 21."),
+                               tags$li("6. Kansas: No data for the weekend of August 22-23."),
+                               tags$li("7. Michigan: Not providing death data on Sundays.")
                                ))
                              )
                            ),
