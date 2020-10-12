@@ -20,8 +20,8 @@ library(wordcloud2)
 
 
 
-load('../output/states_complete.RData')
-load('../output/county_complete.RData')
+load('./output/states_complete.RData')
+load('./output/county_complete.RData')
 
 dashboardPage(
   skin = "blue", 
@@ -131,7 +131,6 @@ dashboardPage(
     #map --------------------------------------------------------------------------------------------------------
     tabItem(tabName = "US_Map",
             h4("This map tracks the cases and deaths of each state of US. If you click on the 'play' button on the left, you could see the evolution of the covid-19 situation in every 3 days."),
-            h4("Get started by choosing a input date"),
             tags$div(id='my_div',
                      class='my_class',
                      selectInput(inputId='stats_dropdown',label='Select Covid-19 Statistics',
@@ -152,7 +151,6 @@ dashboardPage(
     
     tabItem(tabName = "State_Map",
             h4("This map gives a closer look at situations of counties in each state. You can select as many states as you like and find how it is going in the counties."),
-            h4("Get started by choosing a input date"),
             tags$div(id='my_div1',
                      class='my_class',
                      selectInput(inputId='county_name',label='Select State',
