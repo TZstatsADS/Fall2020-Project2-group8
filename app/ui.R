@@ -48,7 +48,7 @@ dashboardPage(
                     h5("Covid-19 outbreaks affect every country in the world. However, the magnitude of the impact varied among countries, as some countries have been successful in limiting the spreading of disease. There are many explanations of why some countries have fewer cases than others. One of them is that the government policy response."),
                     h5("In this project, we built a policy tracker to explore the interaction of state government policy response and Covid-19 statistics overtime (from 01/22/20 to 10/07/20). In particular, we want to see how some key Covid-19 statistics (confirmed cases, death, infection rate, mortality rate, positive test rate, hospitalization rate) change overtime and how the state governments are publishing corresponding containment and closure policies, health system policies, and economic policies."))),
               fluidRow(box(width = 15, title = "User Group", status = "primary",
-                           solidHeader = TRUE, h3("Why Did We Develop this Map?"),
+                           solidHeader = TRUE, h3("Why Did We Develop this App?"),
                            h5("Policy responses to Cover-19 are complex, context-specific and rapidly changing. Documenting the policies and the stringency can help policy makers to understand and assess government responses to Covid-19 over time. "),
                            h5("Our project provides the interactive plot of state government policy and Covid-19 statistics, and it could help to answer questions such as:"),
                            tags$div(tags$ul(
@@ -56,7 +56,7 @@ dashboardPage(
                              tags$li("2. How Covid-19 statistics change after policy stringency change")
                            )))),
               fluidRow(box(width = 15, title = "User Guide", status = "primary",
-                           solidHeader = TRUE, h3("What Does This Map Do?"),
+                           solidHeader = TRUE, h3("What Does This App Do?"),
                            tags$div(tags$ul(
                              tags$li("Map: This map contains 2 U.S. geological graph, one at state level and another at county level. Each graph records the confirmed cases and death. User can select the state, the Covid-19 Statistics and time point"),
                              tags$li("Report : This part contains time series plot on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. User can select up to 3 states/counties at one time.")
