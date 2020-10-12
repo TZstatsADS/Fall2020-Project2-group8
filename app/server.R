@@ -20,7 +20,6 @@ library(RColorBrewer)
 #---------------------------------------Loading the processed data---------------------------------------------
 load('../output/states_complete.RData')
 load('../output/county_complete.RData')
-source("global.R")
 
 shinyServer(function(input,output, session){
   #map --------------------------------------------------------------------------------------------------------
@@ -59,15 +58,30 @@ shinyServer(function(input,output, session){
     confirmed_with_order <- data.frame(State = states$NAME) %>% left_join(confirmed_at_today)
     confirmed_number <- as.numeric(unlist(confirmed_with_order[select_date]))
    
+    rates_with_order <- data.frame(State = states$NAME) %>% left_join(states_complete %>% filter(Date == select_date) %>% dplyr::select(State,Date,Incident_Rate,Mortality_Rate,Testing_Rate,Hospitalization_Rate))
+    
     num_temp <- confirmed_number
     bins <- c(0,exp(0:as.integer(log(1+max(num_temp,na.rm = TRUE)))),Inf)
     map_pal <- colorBin("YlOrRd", domain = states$STATE, bins = bins)
     states$STATE <- num_temp
+    states$Incident_Rate <- rates_with_order$Incident_Rate
+    states$Mortality_Rate <- rates_with_order$Mortality_Rate
+    states$Testing_Rate <- rates_with_order$Testing_Rate
+    states$Hospitalization_Rate <- rates_with_order$Hospitalization_Rate
     
-    labels <- sprintf(
-      "<strong>%s</strong><br/>%g %s",
-      states$NAME, states$STATE,input$stats_dropdown
-    ) %>% lapply(htmltools::HTML)
+    if (select_date < format.Date("2020-04-13",'%Y-%m-%d')){
+      labels <- sprintf(
+        "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g",
+        states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate
+      ) %>% lapply(htmltools::HTML)
+    }
+    else{
+      labels <- sprintf(
+        "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g </br> Testing_Rate %g",
+        states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate,states$Testing_Rate
+      ) %>% lapply(htmltools::HTML)
+    }
+
 
     leafletProxy("map", data = states)%>%
       addPolygons(
@@ -122,7 +136,7 @@ shinyServer(function(input,output, session){
     # won't need to change dynamically (at least, not unless the
     # entire map is being torn down and recreated).
     county_map <- leaflet() %>%
-      setView(-96, 37.8, 4) %>%
+      setView(-96, 17.8, 4) %>%
       addTiles()
     
   })
@@ -200,8 +214,6 @@ shinyServer(function(input,output, session){
       filter(State%in%input$state_dropdown)%>%
       mutate(State_Policy=paste(State,get(input$policy_dropdown),sep=": "))%>%
       mutate(State_Policy=factor(State_Policy))
-    #filtered[[input$policy_dropdown]]<-factor(filtered[[input$policy_dropdown]],levels=unique(states_complete[[input$policy_dropdown]]))
-    #reorder factor levels alphabetically (maybe do this in data_processing.R instead)
     levels(filtered$State_Policy)<-levels(filtered$State_Policy)[order(levels(filtered$State_Policy))]
     
     policy_lengths<-rle(unlist(map(strsplit(levels(filtered$State_Policy),'[:]'),1)))$lengths
@@ -218,7 +230,7 @@ shinyServer(function(input,output, session){
                                                       '<br>Incident Rate:',format(round(Incident_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Incident Rate") +
@@ -228,13 +240,13 @@ shinyServer(function(input,output, session){
                  tooltip='text')%>%
       add_annotations(
         text = "Incident Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -243,23 +255,26 @@ shinyServer(function(input,output, session){
                                                       '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Mortality Rate") +
-                   scale_colour_manual(values=d_state()[[2]],drop=FALSE)+
-                   theme(legend.title = element_blank())+
-                   labs(color=as.character(input$policy_dropdown)),
+                   scale_colour_manual(str_wrap(as.character(input$policy_dropdown),8),values=d_state()[[2]],drop=FALSE)+
+                   labs(color=as.character(input$policy_dropdown))+
+                   theme(legend.title = element_blank()),
+                   #theme(legend.title = element_text(size=9))+
+                   #guides(colour=guide_legend(title=str_wrap(as.character(input$policy_dropdown),8),title.vjust = 0.5,title.position = "top",title.hjust=30,nrow=2)),
+                   #theme(legend.title = element_text(size=10,hjust=30,margin = margin(l=30,r=10)),legend.title.align=1),
                  tooltip='text')%>%
       add_annotations(
         text = "Mortality Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -268,7 +283,7 @@ shinyServer(function(input,output, session){
                                                       '<br>Testing Rate:',format(round(Testing_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Testing Rate") +
@@ -278,13 +293,13 @@ shinyServer(function(input,output, session){
                  tooltip='text')%>%
       add_annotations(
         text = "Testing Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
@@ -293,7 +308,7 @@ shinyServer(function(input,output, session){
                                                       '<br>Hospitalization Rate:',format(round(Hospitalization_Rate,3)),
                                                       str_wrap(paste0('<br>',as.character(input$policy_dropdown),': ',factor(get(input$policy_dropdown))),60),
                                                       '<br>State:',State)))+
-                   geom_point()+
+                   geom_point(size=1.25)+
                    theme_bw() +
                    xlab("Time") +
                    ylab("Hospitalization Rate") +
@@ -303,18 +318,18 @@ shinyServer(function(input,output, session){
                  tooltip='text')%>%
       add_annotations(
         text = "Hospitalization Rate Over Time",
-        x = 0,
+        x = 0.30,
         y = 1,
         yref = "paper",
         xref = "paper",
         xanchor = "left",
         yanchor = "top",
-        yshift = 20,
+        yshift = 23,
         showarrow = FALSE,
         font = list(size = 15)
       )
     
-    subplot(style(p1,showlegend=F),style(p2,showlegend=F),style(p3,showlegend=F),style(p4,showlegend=T),nrows=2,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
+    subplot(style(p1,showlegend=F),style(p2,showlegend=T),style(p3,showlegend=F),style(p4,showlegend=F),nrows=2,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
       layout(paper_bgcolor='transparent')
     
   })
@@ -328,7 +343,6 @@ shinyServer(function(input,output, session){
       filter(Combined_Key%in%input$county_dropdown)%>%
       mutate(County_Policy=paste(County,get(input$policy_dropdown_2),sep=": "))%>%
       mutate(County_Policy=factor(County_Policy))
-    #reorder factor levels alphabetically (maybe do this in data_processing.R instead)
     levels(filtered$County_Policy)<-levels(filtered$County_Policy)[order(levels(filtered$County_Policy))]
     
     policy_lengths<-rle(unlist(map(strsplit(levels(filtered$County_Policy),'[:]'),1)))$lengths
@@ -339,36 +353,62 @@ shinyServer(function(input,output, session){
     
   }) 
   # Line Plot
-  output$incident_rate_plot_2=renderPlotly({
-    ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Incident_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
-                                   text=paste('Date:',Date,
-                                              '<br>Incident Rate:',format(round(Incident_Rate,3)),
-                                              str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
-                                              '<br>County:',Combined_Key))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Incident Rate") +
-               ggtitle("Incident Rate Over Time")+
-               scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown_2)),
-             tooltip='text')
-  })
   
-  output$mortality_rate_plot_2=renderPlotly({
-    ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Mortality_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
-                                   text=paste('Date:',Date,
-                                              '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
-                                              str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
-                                              '<br>County:',Combined_Key))) +
-               geom_point()+
-               theme_bw() +
-               xlab("Time") +
-               ylab("Mortality Rate") +
-               ggtitle("Mortality Rate Over Time")+
-               scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
-               labs(color=as.character(input$policy_dropdown_2)),
-             tooltip='text')
+  output$county_line_plot=renderPlotly({
+    q1<-ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Incident_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
+                                          text=paste('Date:',Date,
+                                                     '<br>Incident Rate:',format(round(Incident_Rate,3)),
+                                                     str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                                     '<br>County:',Combined_Key))) +
+                 geom_point(size=1.25)+
+                 theme_bw() +
+                 xlab("Time") +
+                 ylab("Incident Rate") +
+                 scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
+                 theme(legend.title = element_blank())+
+                 labs(color=as.character(input$policy_dropdown_2)),
+               tooltip='text')%>%
+      add_annotations(
+        text = "Incident Rate Over Time",
+        x = 0.30,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 23,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    q2<-ggplotly(ggplot(d_county()[[1]],aes(x=Date, y=Mortality_Rate,color=str_wrap(factor((County_Policy)),20),label=Combined_Key,
+                                          text=paste('Date:',Date,
+                                                     '<br>Mortality Rate:',format(round(Mortality_Rate,3)),
+                                                     str_wrap(paste0('<br>',as.character(input$policy_dropdown_2),': ',factor(get(input$policy_dropdown_2))),60),
+                                                     '<br>County:',Combined_Key))) +
+                 geom_point(size=1.25)+
+                 theme_bw() +
+                 xlab("Time") +
+                 ylab("Mortality Rate") +
+                 scale_colour_manual(values=d_county()[[2]],drop=FALSE)+
+                 theme(legend.title = element_blank())+
+                 labs(color=as.character(input$policy_dropdown_2)),
+               tooltip='text')%>%
+      add_annotations(
+        text = "Mortality Rate Over Time",
+        x = 0.30,
+        y = 1,
+        yref = "paper",
+        xref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        yshift = 23,
+        showarrow = FALSE,
+        font = list(size = 15)
+      )
+    
+    subplot(style(q1,showlegend=F),style(q2,showlegend=T),nrows=1,shareX=F,shareY=F,titleX=T,titleY=T,margin=0.065)%>%
+      layout(paper_bgcolor='transparent')
+    
   })
   
   #report end --------------------------------------------------------------------------------------------------------

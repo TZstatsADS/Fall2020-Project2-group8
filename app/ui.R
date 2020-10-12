@@ -158,7 +158,10 @@ dashboardPage(
     tabItem(tabName = "State_Comparison",
             fluidRow(column(12,
                             h3("Interactive Dashboard on State and Policy"),
-                            "The following line plots show how the incident rate and mortality changes overtime and with certain policies being enforced")),
+                            "The following line plots show how the incident rate, mortality rate, testing rate, and hospitalization rate change
+                            over time and with a chosen policy being enforced for up to three states. Note that testing rate and hospitalization rate information is only
+                            available starting from April 12, 2020.")),
+            br(),
             pickerInput(inputId="state_dropdown",label='Select up to Three States',
                         choices=unique(states_complete$State),multiple=TRUE,
                         options=list(`max-options`=3),
@@ -166,11 +169,7 @@ dashboardPage(
             ),
             selectInput(inputId='policy_dropdown',label='Select Policy',
                         choices=colnames(states_complete)[27:39]),
-            #plotlyOutput("incident_rate_plot"),
-            #plotlyOutput("mortality_rate_plot"),
-            #plotlyOutput("testing_rate_plot"),
-            #plotlyOutput("hospitalization_rate_plot"),
-            plotlyOutput("state_line_plot",height="800px",width="1500px"),
+            plotlyOutput("state_line_plot",height="800px",width="100%"),
             br(),
             br()
     ),
@@ -178,7 +177,11 @@ dashboardPage(
     tabItem(tabName="County_Comparison",
             fluidRow(column(12,
                             h3("Interactive Dashboard on County and Policy"),
-                            "The following line plots show how the incident rate and mortality changes overtime and with certain policies being enforced")),
+                            "The following line plots show how the incident rate and mortality rate change
+                            over time and with a chosen policy being enforced for up to three counties. Note that testing rate and hospitalization rate information is not
+                            available at the county level. Also, policy information is defined at the state level and not at the county level, so all counties 
+                            in the same state have the same policy levels enforced for any given date.")),
+            br(),
             pickerInput(inputId="county_dropdown",label='Select up to Three Counties',
                         choices=split((county_complete%>%filter(Date=='2020-10-03'))$Combined_Key,(county_complete%>%filter(Date=='2020-10-03'))$State),
                         multiple=TRUE,
@@ -188,8 +191,9 @@ dashboardPage(
             ),
             selectInput(inputId='policy_dropdown_2',label='Select Policy',
                         choices=colnames(county_complete)[24:36]),
-            plotlyOutput("incident_rate_plot_2"),
-            plotlyOutput("mortality_rate_plot_2")
+            plotlyOutput("county_line_plot",height="400px",width="100%"),
+            br(),
+            br()
             
             
     ),
@@ -205,7 +209,7 @@ dashboardPage(
                     )),
               fluidRow(
                 box(width = 15, title = "Project Code", status = "primary",
-                    solidHeader = TRUE,"The code for this project can be find on",
+                    solidHeader = TRUE,"The code for this project can be found on",
                     tags$a(href="https://github.com/TZstatsADS/Fall2020-Project2-group8","our Github")
                     ))
             )
