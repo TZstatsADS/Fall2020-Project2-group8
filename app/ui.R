@@ -66,10 +66,13 @@ dashboardPage(
                            h4("Dataset & Data Processing"),
                            h5("We used JHU datasets(csse_covid_19_daily_reports_us & time_series_covid19_confirmed_US.csv) and OxCGRT(OxCGRT_US_latest.csv) to construct our dataset. The JHU datasets contain information on the Covid-19 statistics, detailed below. The OxCGRT systematically collects information on several different common policy responses governments have taken, records these policies on a scale to reflect the extent of government action, and aggregates these scores into a suite of policy indices."),
                            
+                           h4("Potential Data Collection Biases"),
+                           h5("There are also some potential biases for Covid-19 statistics data collection, as there could be under-ascertainment of mild cases and time lags."),
+                           
                            h4("Data quality"),
                            h5("There are some limitations of our dataset, including:"),
                            tags$div(tags$ul(
-                             tags$li("1. Missing values: for hospitalization rate, the data is only available starting on 04/12/20"),
+                             tags$li("1. Missing values: Hospitalization rate and testing rate are only available starting on 04/12/20 at state level."),
                              tags$li("2. Dropped variables: we excluded some variables from the original OxCGRT for analysis, as 80% of the data are missing values. The variables excluded are Fiscal measures, International support, Emergency investment in healthcare, Investment in vaccines."),
                              tags$li("3. Some states have irregular Covid-19 statistics update schedule: "),
                              tags$div(tags$ul(
