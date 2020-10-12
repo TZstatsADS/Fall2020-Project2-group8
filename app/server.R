@@ -117,6 +117,9 @@ shinyServer(function(input,output, session){
     if(!is.null(input$county_name)){
       return(input$county_name) 
     }
+    else{
+      return(NULL)
+    }
   })
   
   county_get_df <- reactive({
@@ -141,59 +144,61 @@ shinyServer(function(input,output, session){
     
   })
   
-  
+
   observe({
     
     county_select_date <- county_date()
     county_df_temp <- county_get_df()
     county_name_array <- find_county_name()
     
-    
-    for (i in 1:length(county_name_array)){
-      county_name <- county_name_array[i]
-      
-      
-      cdata<-county_df_temp[,c('Admin2','Province_State','STATE',county_select_date)]
-      cdata_temp2<-left_join(data.frame(counties),cdata,by=c('STATE'='STATE','NAME'='Admin2'))
-      counties$Confirmed<-cdata_temp2[,county_select_date]
-      #-----------find_state_code
-      df_find_statecode <- data.frame(cdata %>% group_by(Province_State) %>% summarize(code = first(STATE)))
-      county_number <- df_find_statecode[df_find_statecode$Province_State==county_name,2]
-      #-----------find_state_location
-      county_loc <- c(df_getloc[df_getloc$NAME==county_name,2],df_getloc[df_getloc$NAME==county_name,3])
-      
-      cdata_selected_county <- counties[counties$STATE==county_number,c('NAME',"Confirmed")]
-      
-      labels <- sprintf(
-        "<strong>%s</strong><br/>%g %s",
-        unlist(map(cdata_selected_county$NAME,convert_xf1)), cdata_selected_county$Confirmed,input$county_stats_dropdown
-      ) %>% lapply(htmltools::HTML)
-      
-      find_max <- max(county_df_temp[,c("2020-10-01")])
-      bins <- c(0,exp(0:as.integer(log(1+find_max))),Inf)
-      county_map_pal <- colorBin("YlOrRd", domain = cdata_selected_county$Confirmed, bins = bins)
-      
-      leafletProxy("county_map", data = cdata_selected_county)%>%addTiles()%>%
-        addPolygons(
-          fillColor = ~county_map_pal(Confirmed),
-          weight = 2,
-          opacity = 1,
-          color = "white",
-          dashArray = "3",
-          fillOpacity = 0.7,
-          highlight = highlightOptions(
-            weight = 5,
-            color = "#666",
-            dashArray = "",
+    if(!is.null(county_name_array)){
+      for (i in 1:length(county_name_array)){
+        county_name <- county_name_array[i]
+        
+        
+        cdata<-county_df_temp[,c('Admin2','Province_State','STATE',county_select_date)]
+        cdata_temp2<-left_join(data.frame(counties),cdata,by=c('STATE'='STATE','NAME'='Admin2'))
+        counties$Confirmed<-cdata_temp2[,county_select_date]
+        #-----------find_state_code
+        df_find_statecode <- data.frame(cdata %>% group_by(Province_State) %>% summarize(code = first(STATE)))
+        county_number <- df_find_statecode[df_find_statecode$Province_State==county_name,2]
+        #-----------find_state_location
+        county_loc <- c(df_getloc[df_getloc$NAME==county_name,2],df_getloc[df_getloc$NAME==county_name,3])
+        
+        cdata_selected_county <- counties[counties$STATE==county_number,c('NAME',"Confirmed")]
+        
+        labels <- sprintf(
+          "<strong>%s</strong><br/>%g %s",
+          unlist(map(cdata_selected_county$NAME,convert_xf1)), cdata_selected_county$Confirmed,input$county_stats_dropdown
+        ) %>% lapply(htmltools::HTML)
+        
+        find_max <- max(county_df_temp[,c("2020-10-01")])
+        bins <- c(0,exp(0:as.integer(log(1+find_max))),Inf)
+        county_map_pal <- colorBin("YlOrRd", domain = cdata_selected_county$Confirmed, bins = bins)
+        
+        leafletProxy("county_map", data = cdata_selected_county)%>%addTiles()%>%
+          addPolygons(
+            fillColor = ~county_map_pal(Confirmed),
+            weight = 2,
+            opacity = 1,
+            color = "white",
+            dashArray = "3",
             fillOpacity = 0.7,
-            bringToFront = TRUE),
-          label = labels,
-          labelOptions = labelOptions(
-            style = list("font-weight" = "normal", padding = "3px 8px"),
-            textsize = "15px",
-            direction = "auto")) 
-      
+            highlight = highlightOptions(
+              weight = 5,
+              color = "#666",
+              dashArray = "",
+              fillOpacity = 0.7,
+              bringToFront = TRUE),
+            label = labels,
+            labelOptions = labelOptions(
+              style = list("font-weight" = "normal", padding = "3px 8px"),
+              textsize = "15px",
+              direction = "auto")) 
+        
+      }
     }
+    
     
   })
   
