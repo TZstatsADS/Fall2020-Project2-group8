@@ -18,8 +18,9 @@ library(tibble)
 library(RColorBrewer)
 
 #---------------------------------------Loading the processed data---------------------------------------------
-load('../output/states_complete.RData')
-load('../output/county_complete.RData')
+load('./output/states_complete.RData')
+load('./output/county_complete.RData')
+source('global.R')
 
 shinyServer(function(input,output, session){
   #map --------------------------------------------------------------------------------------------------------

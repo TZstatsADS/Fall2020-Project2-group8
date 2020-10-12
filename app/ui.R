@@ -20,8 +20,8 @@ library(wordcloud2)
 
 
 
-load('../output/states_complete.RData')
-load('../output/county_complete.RData')
+load('./output/states_complete.RData')
+load('./output/county_complete.RData')
 
 dashboardPage(
   skin = "blue", 
