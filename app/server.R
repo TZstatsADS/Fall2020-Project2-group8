@@ -154,9 +154,17 @@ shinyServer(function(input,output, session){
     county_name_array <- find_county_name()
     
     if(!is.null(county_name_array)){
+      rates_county <- county_complete %>% filter(Date == county_select_date) %>% dplyr::select(County,State,Incident_Rate,Mortality_Rate)
+      rates_county_temp <- left_join(rates_county,data.frame(states),by=c('State'='NAME'))
+      rates_county_with_order <- left_join(data.frame(counties),rates_county_temp,by=c('STATE'='STATE','NAME'='County'))
+      
+      counties$Incident_Rate<-rates_county_with_order$Incident_Rate
+      counties$Mortality_Rate<-rates_county_with_order$Mortality_Rate
+      
       for (i in 1:length(county_name_array)){
         county_name <- county_name_array[i]
         
+       
         
         cdata<-county_df_temp[,c('Admin2','Province_State','STATE',county_select_date)]
         cdata_temp2<-left_join(data.frame(counties),cdata,by=c('STATE'='STATE','NAME'='Admin2'))
@@ -167,11 +175,11 @@ shinyServer(function(input,output, session){
         #-----------find_state_location
         county_loc <- c(df_getloc[df_getloc$NAME==county_name,2],df_getloc[df_getloc$NAME==county_name,3])
         
-        cdata_selected_county <- counties[counties$STATE==county_number,c('NAME',"Confirmed")]
+        cdata_selected_county <- counties[counties$STATE==county_number,c('NAME',"Confirmed","Incident_Rate","Mortality_Rate")]
         
         labels <- sprintf(
-          "<strong>%s</strong><br/>%g %s",
-          unlist(map(cdata_selected_county$NAME,convert_xf1)), cdata_selected_county$Confirmed,input$county_stats_dropdown
+          "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g",
+          unlist(map(cdata_selected_county$NAME,convert_xf1)), cdata_selected_county$Confirmed,input$county_stats_dropdown , cdata_selected_county$Incident_Rate, cdata_selected_county$Mortality_Rate
         ) %>% lapply(htmltools::HTML)
         
         find_max <- max(county_df_temp[,c("2020-10-01")])
