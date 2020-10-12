@@ -115,9 +115,11 @@ shinyServer(function(input,output, session){
   
   find_county_name <- reactive({
     if(!is.null(input$county_name)){
+      leafletProxy("county_map", data = states)%>%addTiles()%>%clearShapes()
       return(input$county_name) 
     }
     else{
+      leafletProxy("county_map", data = states)%>%addTiles()%>%clearShapes()
       return(NULL)
     }
   })
