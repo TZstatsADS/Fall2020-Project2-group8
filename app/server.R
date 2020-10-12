@@ -58,15 +58,30 @@ shinyServer(function(input,output, session){
     confirmed_with_order <- data.frame(State = states$NAME) %>% left_join(confirmed_at_today)
     confirmed_number <- as.numeric(unlist(confirmed_with_order[select_date]))
    
+    rates_with_order <- data.frame(State = states$NAME) %>% left_join(states_complete %>% filter(Date == select_date) %>% dplyr::select(State,Date,Incident_Rate,Mortality_Rate,Testing_Rate,Hospitalization_Rate))
+    
     num_temp <- confirmed_number
     bins <- c(0,exp(0:as.integer(log(1+max(num_temp,na.rm = TRUE)))),Inf)
     map_pal <- colorBin("YlOrRd", domain = states$STATE, bins = bins)
     states$STATE <- num_temp
+    states$Incident_Rate <- rates_with_order$Incident_Rate
+    states$Mortality_Rate <- rates_with_order$Mortality_Rate
+    states$Testing_Rate <- rates_with_order$Testing_Rate
+    states$Hospitalization_Rate <- rates_with_order$Hospitalization_Rate
     
-    labels <- sprintf(
-      "<strong>%s</strong><br/>%g %s",
-      states$NAME, states$STATE,input$stats_dropdown
-    ) %>% lapply(htmltools::HTML)
+    if (select_date < format.Date("2020-04-13",'%Y-%m-%d')){
+      labels <- sprintf(
+        "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g",
+        states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate
+      ) %>% lapply(htmltools::HTML)
+    }
+    else{
+      labels <- sprintf(
+        "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g </br> Testing_Rate %g",
+        states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate,states$Testing_Rate
+      ) %>% lapply(htmltools::HTML)
+    }
+
 
     leafletProxy("map", data = states)%>%
       addPolygons(
@@ -121,7 +136,7 @@ shinyServer(function(input,output, session){
     # won't need to change dynamically (at least, not unless the
     # entire map is being torn down and recreated).
     county_map <- leaflet() %>%
-      setView(-96, 37.8, 4) %>%
+      setView(-96, 17.8, 4) %>%
       addTiles()
     
   })
