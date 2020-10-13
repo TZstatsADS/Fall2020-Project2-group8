@@ -14,6 +14,21 @@ counties<- geojsonio::geojson_read('./output/gz_2010_us_050_00_20m.json',what='s
 
 Confirmed <- read_csv("./output/Confirmed.csv")
 Deaths <- read_csv("./output/Deaths.csv")
+C1_School_closing <- read_csv("./output/C1_School_closing.csv")
+C2_Workplace_closing<-read_csv('./output/C2_Workplace_closing.csv')
+C3_Cancel_public_events<-read_csv('./output/C3_Cancel_public_events.csv')
+C4_Restrictions_on_gatherings<-read_csv('./output/C4_Restrictions_on_gatherings.csv')
+C5_Close_public_transport<-read_csv('./output/C5_Close_public_transport.csv')
+C6_Stay_at_home_requirements<-read_csv('./output/C6_Stay_at_home_requirements.csv')
+C7_Restrictions_on_internal_movement<-read_csv('./output/C7_Restrictions_on_internal_movement.csv')
+C8_International_travel_controls<-read_csv('./output/C8_International_travel_controls.csv')
+E1_Income_support<-read_csv('./output/E1_Income_support.csv')
+E2_Debt_contract_relief<-read_csv('./output/E2_Debt_contract_relief.csv')
+H1_Public_information_campaigns<-read_csv('./output/H1_Public_information_campaigns.csv')
+H2_Testing_policy<-read_csv('./output/H2_Testing_policy.csv')
+H3_Contact_tracing<-read_csv('./output/H3_Contact_tracing.csv')
+
+
 date_choices <- names(Confirmed)[-1]
 
 

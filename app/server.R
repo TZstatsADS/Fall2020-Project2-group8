@@ -36,9 +36,48 @@ shinyServer(function(input,output, session){
       if (input$stats_dropdown == "Cases"){
         return(Confirmed)
       }
-      else{
+      else if (input$stats_dropdown == "Deaths"){
         return(Deaths)
       } 
+      else if (input$stats_dropdown=='C1_School_closing'){
+        return(C1_School_closing)
+      }
+      else if (input$stats_dropdown=='C2_Workplace_closing'){
+        return(C2_Workplace_closing)
+      }
+      else if (input$stats_dropdown=='C3_Cancel_public_events'){
+        return(C3_Cancel_public_events)
+      }
+      else if (input$stats_dropdown=='C4_Restrictions_on_gatherings'){
+        return(C4_Restrictions_on_gatherings)
+      }
+      else if (input$stats_dropdown=='C5_Close_public_transport'){
+        return(C5_Close_public_transport)
+      }
+      else if (input$stats_dropdown=='C6_Stay_at_home_requirements'){
+        return(C6_Stay_at_home_requirements)
+      }
+      else if (input$stats_dropdown=='C7_Restrictions_on_internal_movement'){
+        return(C7_Restrictions_on_internal_movement)
+      }
+      else if (input$stats_dropdown=='C8_International_travel_controls'){
+        return(C8_International_travel_controls)
+      }
+      else if (input$stats_dropdown=='E1_Income_support'){
+        return(E1_Income_support)
+      }
+      else if (input$stats_dropdown=='E2_Debt_contract_relief'){
+        return(E2_Debt_contract_relief)
+      }
+      else if (input$stats_dropdown=='H1_Public_information_campaigns'){
+        return(H1_Public_information_campaigns)
+      }
+      else if (input$stats_dropdown=='H2_Testing_policy'){
+        return(H2_Testing_policy)
+      }
+      else {
+        return(H3_Contact_tracing)
+      }
     }
   })
   
@@ -57,32 +96,61 @@ shinyServer(function(input,output, session){
     df_temp <- get_df()
     confirmed_at_today <- df_temp %>% dplyr::select(State,select_date)
     confirmed_with_order <- data.frame(State = states$NAME) %>% left_join(confirmed_at_today)
-    confirmed_number <- as.numeric(unlist(confirmed_with_order[select_date]))
-   
-    rates_with_order <- data.frame(State = states$NAME) %>% left_join(states_complete %>% filter(Date == select_date) %>% dplyr::select(State,Date,Incident_Rate,Mortality_Rate,Testing_Rate,Hospitalization_Rate))
     
-    num_temp <- confirmed_number
-    bins <- c(0,exp(0:as.integer(log(1+max(num_temp,na.rm = TRUE)))),Inf)
-    map_pal <- colorBin("YlOrRd", domain = states$STATE, bins = bins)
-    states$STATE <- num_temp
-    states$Incident_Rate <- rates_with_order$Incident_Rate
-    states$Mortality_Rate <- rates_with_order$Mortality_Rate
-    states$Testing_Rate <- rates_with_order$Testing_Rate
-    states$Hospitalization_Rate <- rates_with_order$Hospitalization_Rate
+    if(input$stats_dropdown=='Cases'|input$stats_dropdown=='Deaths')
+    {
+      confirmed_number <- as.numeric(unlist(confirmed_with_order[select_date]))
+      rates_with_order <- data.frame(State = states$NAME) %>% left_join(states_complete %>% filter(Date == select_date) %>% dplyr::select(State,Date,Incident_Rate,Mortality_Rate,Testing_Rate,Hospitalization_Rate))
+      num_temp <- confirmed_number
+      bins <- c(0,exp(0:as.integer(log(1+max(num_temp,na.rm = TRUE)))),Inf)
+      map_pal <- colorBin("YlOrRd", domain = states$STATE, bins = bins)
+      
+      states$STATE <- num_temp
+      states$Incident_Rate <- rates_with_order$Incident_Rate
+      states$Mortality_Rate <- rates_with_order$Mortality_Rate
+      states$Testing_Rate <- rates_with_order$Testing_Rate
+      states$Hospitalization_Rate <- rates_with_order$Hospitalization_Rate
+      
+      if (select_date < format.Date("2020-04-12",'%Y-%m-%d')){
+        labels <- sprintf(
+          "<strong>%s</strong><br/>%s %s </br> Incident Rate: %g </br> Mortality Rate: %g",
+          states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate
+        ) %>% lapply(htmltools::HTML)
+      }
+      else{
+        labels <- sprintf(
+          "<strong>%s</strong><br/>%s %s </br> Incident Rate: %g </br> Mortality Rate: %g </br> Testing Rate: %g </br> Hospitalization Rate: %g",
+          states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate,states$Testing_Rate,states$Hospitalization_Rate
+        ) %>% lapply(htmltools::HTML)
+      }
+    }
     
-    if (select_date < format.Date("2020-04-13",'%Y-%m-%d')){
-      labels <- sprintf(
-        "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g",
-        states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate
-      ) %>% lapply(htmltools::HTML)
+    else #policy is chosen
+    {
+      confirmed_number <- as.character(unlist(confirmed_with_order[select_date]))
+      rates_with_order <- data.frame(State = states$NAME) %>% left_join(states_complete %>% filter(Date == select_date) %>% dplyr::select(State,Date,Incident_Rate,Mortality_Rate,Testing_Rate,Hospitalization_Rate))
+      num_temp <- confirmed_number
+      map_pal <- colorFactor("YlOrRd", domain = states$STATE, levels=levels(states_complete[[input$stats_dropdown]]))
+      
+      states$STATE <- num_temp
+      states$Incident_Rate <- rates_with_order$Incident_Rate
+      states$Mortality_Rate <- rates_with_order$Mortality_Rate
+      states$Testing_Rate <- rates_with_order$Testing_Rate
+      states$Hospitalization_Rate <- rates_with_order$Hospitalization_Rate
+      
+      if (select_date < format.Date("2020-04-12",'%Y-%m-%d')){
+        labels <- sprintf(
+          "<strong>%s</strong><br/>%s: %s </br> Incident Rate: %g </br> Mortality Rate: %g",
+          states$NAME,input$stats_dropdown,states$STATE,states$Incident_Rate,states$Mortality_Rate
+        ) %>% lapply(htmltools::HTML)
+      }
+      else{
+        labels <- sprintf(
+          "<strong>%s</strong><br/>%s: %s </br> Incident Rate: %g </br> Mortality Rate: %g </br> Testing Rate: %g </br> Hospitalization Rate: %g",
+          states$NAME,input$stats_dropdown,states$STATE,states$Incident_Rate,states$Mortality_Rate,states$Testing_Rate,states$Hospitalization_Rate
+        ) %>% lapply(htmltools::HTML)
+      }
     }
-    else{
-      labels <- sprintf(
-        "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g </br> Testing_Rate %g",
-        states$NAME, states$STATE,input$stats_dropdown,states$Incident_Rate,states$Mortality_Rate,states$Testing_Rate
-      ) %>% lapply(htmltools::HTML)
-    }
-
 
     leafletProxy("map", data = states)%>%
       addPolygons(
@@ -179,7 +247,7 @@ shinyServer(function(input,output, session){
         cdata_selected_county <- counties[counties$STATE==county_number,c('NAME',"Confirmed","Incident_Rate","Mortality_Rate")]
         
         labels <- sprintf(
-          "<strong>%s</strong><br/>%g %s </br> Incident_Rate %g </br> Mortality_Rate %g",
+          "<strong>%s</strong><br/>%g %s </br> Incident Rate: %g </br> Mortality Rate: %g",
           unlist(map(cdata_selected_county$NAME,convert_xf1)), cdata_selected_county$Confirmed,input$county_stats_dropdown , cdata_selected_county$Incident_Rate, cdata_selected_county$Mortality_Rate
         ) %>% lapply(htmltools::HTML)
         
