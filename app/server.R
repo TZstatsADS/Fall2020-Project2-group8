@@ -130,7 +130,8 @@ shinyServer(function(input,output, session){
       confirmed_number <- as.character(unlist(confirmed_with_order[select_date]))
       rates_with_order <- data.frame(State = states$NAME) %>% left_join(states_complete %>% filter(Date == select_date) %>% dplyr::select(State,Date,Incident_Rate,Mortality_Rate,Testing_Rate,Hospitalization_Rate))
       num_temp <- confirmed_number
-      map_pal <- colorFactor("YlOrRd", domain = states$STATE, levels=levels(states_complete[[input$stats_dropdown]]))
+      map_pal <- colorFactor(brewer.pal(name="YlOrRd",n=length(levels(states_complete[[input$stats_dropdown]]))), 
+                             domain = states$STATE, levels=levels(states_complete[[input$stats_dropdown]])[order(levels(states_complete[[input$stats_dropdown]]))])
       
       states$STATE <- num_temp
       states$Incident_Rate <- rates_with_order$Incident_Rate

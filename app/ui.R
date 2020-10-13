@@ -130,7 +130,8 @@ dashboardPage(
     
     #map --------------------------------------------------------------------------------------------------------
     tabItem(tabName = "US_Map",
-            h4("This map tracks the cases and deaths of each state of US. If you click on the 'play' button on the left, you could see the evolution of the covid-19 situation in every 3 days."),
+            h4("This map tracks the cases, deaths, and policy levels of each state of US. 
+               A darker color means more cases, deaths, or stricter policy levels were implemented relative to other states on that day. If you click on the 'play' button on the left, you could see the evolution of the covid-19 situation in every 3 days."),
             h4("Let's get started by selecting a input date!"),
             tags$div(id='my_div',
                      class='my_class',
@@ -153,7 +154,7 @@ dashboardPage(
     ),
     
     tabItem(tabName = "State_Map",
-            h4("This map gives a closer look at situations of counties in each state. You can select as many states as you like and find how it is going in the counties."),
+            h4("This map gives a closer look at situations of counties in each state. Note that no policy information is displayed since policies are defined at the state level. You can select as many states as you like and find how it is going in the counties."),
             h4("Let's get started by selecting a input date!"),
             
             tags$div(id='my_div1',
