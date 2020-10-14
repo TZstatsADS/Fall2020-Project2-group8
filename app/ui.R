@@ -20,6 +20,7 @@ load('./output/states_complete.RData')
 load('./output/county_complete.RData')
 
 dashboardPage(
+  title="U.S. Covid-19 Policy Tracker",
   skin = "blue", 
   dashboardHeader(title = span("U.S. Covid-19 Policy Tracker",style="font-size: 16px")),
   dashboardSidebar(sidebarMenu(
@@ -41,8 +42,8 @@ dashboardPage(
                 box(width = 15, title = "Introduction", status = "primary",
                     solidHeader = TRUE, h3("U.S. Covid-19 Policy Tracker"),
                     h4("By Zihan Chen, Xujie Ma, Rohan Uppuluri & Jiaqi Yuan"),
-                    h5("Covid-19 outbreaks affect every country in the world. However, the magnitude of the impact varied among countries, as some countries have been successful in limiting the spreading of disease. There are many explanations of why some countries have fewer cases than others. One of them is that the government policy response."),
-                    h5("In this project, we built a policy tracker for policy makers to explore the interaction of state government policy response and Covid-19 statistics overtime (from 01/22/20 to 10/12/20). In particular, we want to see how some key Covid-19 statistics (confirmed cases, death, infection rate, mortality rate, positive test rate, hospitalization rate) change overtime and how the state governments are publishing corresponding containment and closure policies, health system policies, and economic policies."))),
+                    h5("Covid-19 outbreaks have affected every region in the world. However, the magnitude of the impact has varied, as some regions have been successful in limiting the spread of the disease. There are many explanations of why some places have fewer cases than others. One of them is that the government policy response."),
+                    h5("In this project, we built a policy tracker for policy makers in the U.S. to explore the interaction of state government policy response and Covid-19 statistics overtime (from 01/22/20 to 10/12/20). In particular, we want to see how some key Covid-19 statistics (confirmed cases, death, infection rate, mortality rate, positive test rate, hospitalization rate) change overtime and how the state governments are publishing corresponding containment and closure policies, health system policies, and economic policies."))),
               fluidRow(box(width = 15, title = "User Group", status = "primary",
                            solidHeader = TRUE, h3("Why Did We Develop this App?"),
                            h5("Policy responses to Covid-19 are complex, context-specific and rapidly changing. Documenting the policies and the stringency can help policy makers to understand and assess government responses to Covid-19 over time. "),
@@ -56,8 +57,8 @@ dashboardPage(
               fluidRow(box(width = 15, title = "App Contents", status = "primary",
                            solidHeader = TRUE, h3("What Does This App Include?"),
                            tags$div(tags$ul(
-                             tags$li("Interactive Map: This map contains 2 U.S. geological graphs, one at state level and another at county level. Each graph records the confirmed cases and deaths. User can select the state, Covid-19 Statistics, and time point"),
-                             tags$li("Interactive Trend Plots : This tab contains time series plot on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. User can select up to 3 states/counties at one time."),
+                             tags$li("Interactive Map: This map contains two U.S. geological graphs, one at state level and another at county level. Each graph records the confirmed cases and deaths. The user can select the state, Covid-19 Statistics, and time point"),
+                             tags$li("Interactive Trend Plots : This tab contains time series plots on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. The user can select up to three states/counties at one time."),
                              tags$li("Reference: This tab provides details on what dataset we use, how we processed our data and our project code.")
                              
                            )))),
@@ -95,21 +96,21 @@ dashboardPage(
 
                            )),
                            
-                           h5("The Covid-19 Statistics include:"),
+                           h5("The Covid-19 statistics include:"),
                            tags$div(tags$ul(
                              tags$li("1. Total Confirmed Cases"),
-                             tags$li("2. Total Number of Death"),
-                             tags$li("3. Incidence Rate: cases per 100,000 persons"),
+                             tags$li("2. Total Number of Deaths"),
+                             tags$li("3. Incidence Rate: cases per 100,000 people"),
                              tags$li("4. Mortality Rate: Number recorded deaths * 100/ Number confirmed cases"),
-                             tags$li("5. Testing Rate: Total test results (positive + negative) per 100,000 persons"),
+                             tags$li("5. Testing Rate: Total test results (positive + negative) per 100,000 people"),
                              tags$li("6. Hospitalization Rate: Total number hospitalized / Number cases"))
-                           ),br(),
+                           ),br(),br(),
                            h4("Data Quality"),
                            h5(""),
                            h5("There are some potential data collection biases for Covid-19 statistics data collection, as there could be under-ascertainment of mild cases and time lags."),
                            h5("There are some limitations of our dataset, including:"),
                            tags$div(tags$ul(
-                             tags$li("1. Missing values: Hospitalization rate and testing rate are only available starting on 04/12/20 at state level."),
+                             tags$li("1. Missing values: Hospitalization rate and testing rate are only available starting on 04/12/20 at state level, and they are not available for any date at the county level."),
                              tags$li("2. Dropped variables: we excluded some variables from the original OxCGRT for analysis, as 80% of the data are missing values. The variables excluded are Fiscal measures, International support, Emergency investment in healthcare, Investment in vaccines."),
                              tags$li("3. Some states have irregular Covid-19 statistics update schedule: "),
                              tags$div(tags$ul(
@@ -192,7 +193,7 @@ dashboardPage(
     #map end --------------------------------------------------------------------------------------------------------
     
     
-    #report --------------------------------------------------------------------------------------------------------
+    #trend plot --------------------------------------------------------------------------------------------------------
     tabItem(tabName = "State_Level_Comparison",
             fluidRow(column(12,
                             h3("Interactive Dashboard on State and Policy"),
@@ -235,28 +236,25 @@ dashboardPage(
             
             
     ),
-    #report end --------------------------------------------------------------------------------------------------------
+    #trend plot end --------------------------------------------------------------------------------------------------------
     tabItem(tabName = "Reference",
             fluidPage(
               fluidRow(
-                box(width = 15, title = "Raw Dataset", status = "primary",
-                    solidHeader = TRUE,"The raw dataset for this project is from",
+                box(width = 15, title = "Raw Datasets", status = "primary",
+                    solidHeader = TRUE,"The raw datasets for this project are from",
                     tags$a(href="https://github.com/OxCGRT/USA-covid-policy/tree/master/data","Oxford Covid-19 Government Response Tracker"),
                     "and",
                     tags$a(href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data","JHU CSSE COVID-19 Dataset"),
                     ".",
-                    "We use", 
+                    "We used", 
                     tags$a(href="https://eric.clst.org/tech/usgeojson/", "geojson data"),
-                    "for the United States to draw US map and State map."
+                    "for the United States to draw US map and State map.",br(),br(),
+                    "We used the JHU datasets(csse_covid_19_daily_reports_us & time_series_covid19_confirmed_US.csv) and OxCGRT(OxCGRT_US_latest.csv) to construct our dataset. The JHU datasets contain information on the Covid-19 statistics from sources like the U.S. Centers for Disease Control and Prevention, which have a set of consistent standards for working with state and local health departments to get data. The OxCGRT systematically collects publicly available information on several different common policy responses governments have taken, records these policies on a scale to reflect the extent of government action, and aggregates these scores into a suite of policy indices."
                     )),
-              fluidRow(
-                box(width = 15, title = "Dataset & Data Processing", status = "primary",
-                    solidHeader = TRUE,"We used JHU datasets(csse_covid_19_daily_reports_us & time_series_covid19_confirmed_US.csv) and OxCGRT(OxCGRT_US_latest.csv) to construct our dataset. The JHU datasets contain information on the Covid-19 statistics, detailed below. The OxCGRT systematically collects information on several different common policy responses governments have taken, records these policies on a scale to reflect the extent of government action, and aggregates these scores into a suite of policy indices.")
-              ),
               fluidRow(
                 box(width = 15, title = "Project Code", status = "primary",
                     solidHeader = TRUE,"The code for this project can be found on",
-                    tags$a(href="https://github.com/TZstatsADS/Fall2020-Project2-group8","our Github")
+                    tags$a(href="https://github.com/TZstatsADS/Fall2020-Project2-group8","our Github.")
                     ))
               
             )
