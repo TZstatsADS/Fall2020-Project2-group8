@@ -21,7 +21,7 @@ The **learning goals** for this project is:
 Term: Fall 2020
 
 + Group 8
-+ **Covid-19 Policy Tracker**: Presented by:
++ **US Covid-19 Policy Tracker**: Presented by:
 	+ Zihan Chen
 	+ Rohan Uppuluri
 	+ Jiaqi Yuan
