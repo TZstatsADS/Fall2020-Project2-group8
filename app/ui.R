@@ -1,11 +1,9 @@
-packages.used <- c("shiny", "shinydashboard", "leaflet", "shinyWidgets","plotly","shinythemes","wordcloud2", "DT")
+packages.used <- c("shiny", "shinydashboard", "leaflet", "shinyWidgets","plotly","shinythemes","tidyverse")
 packages.needed <- setdiff(packages.used, intersect(installed.packages()[,1], packages.used))
 if(length(packages.needed) > 0)
 {
   install.packages(packages.needed, dependencies = TRUE)
 }
-library(dplyr)
-library(DT)
 library(leaflet)
 library(plotly)
 library(readr)
@@ -16,8 +14,6 @@ library(shinyWidgets)
 library(stringr)
 library(tibble)
 library(tidyverse)
-library(wordcloud2)
-
 
 
 load('./output/states_complete.RData')
@@ -46,7 +42,7 @@ dashboardPage(
                     solidHeader = TRUE, h3("U.S. Covid-19 Policy Tracker"),
                     h4("By Zihan Chen, Xujie Ma, Rohan Uppuluri & Jiaqi Yuan"),
                     h5("Covid-19 outbreaks affect every country in the world. However, the magnitude of the impact varied among countries, as some countries have been successful in limiting the spreading of disease. There are many explanations of why some countries have fewer cases than others. One of them is that the government policy response."),
-                    h5("In this project, we built a policy tracker to explore the interaction of state government policy response and Covid-19 statistics overtime (from 01/22/20 to 10/12/20). In particular, we want to see how some key Covid-19 statistics (confirmed cases, death, infection rate, mortality rate, positive test rate, hospitalization rate) change overtime and how the state governments are publishing corresponding containment and closure policies, health system policies, and economic policies."))),
+                    h5("In this project, we built a policy tracker for policy makers to explore the interaction of state government policy response and Covid-19 statistics overtime (from 01/22/20 to 10/12/20). In particular, we want to see how some key Covid-19 statistics (confirmed cases, death, infection rate, mortality rate, positive test rate, hospitalization rate) change overtime and how the state governments are publishing corresponding containment and closure policies, health system policies, and economic policies."))),
               fluidRow(box(width = 15, title = "User Group", status = "primary",
                            solidHeader = TRUE, h3("Why Did We Develop this App?"),
                            h5("Policy responses to Covid-19 are complex, context-specific and rapidly changing. Documenting the policies and the stringency can help policy makers to understand and assess government responses to Covid-19 over time. "),
@@ -54,7 +50,9 @@ dashboardPage(
                            tags$div(tags$ul(
                              tags$li("1. How did policy stringency change with the evolving situation?"),
                              tags$li("2. How Covid-19 statistics change after policy stringency change?")
-                           )))),
+                           )),
+                           h5("However, it's important to note that this app should mainly be used as a first step in deciding on policy implementation levels. Correlations are not causations, so 
+                              any correlations between policy levels and Covid-19 statistics found through this app should be studied further by the user to determine if it's actually a causation before making any policy changes."))),
               fluidRow(box(width = 15, title = "App Contents", status = "primary",
                            solidHeader = TRUE, h3("What Does This App Include?"),
                            tags$div(tags$ul(
@@ -66,7 +64,7 @@ dashboardPage(
               fluidRow(box(width = 15, title = "Policies and Covid-19 statistics", status = "primary",
                            solidHeader = TRUE, h3("What Policies and Covid-19 Statistics Are Included?"),
                            h4("Data Description"),
-                           h5("In this project, we used JHU datasets and OxCGRT dataset (details in the Reference tab). We have three main policy areas and six Covid-19 Statistics"),
+                           h5("In this project, we used JHU datasets and OxCGRT dataset (details in the Reference tab). We have three main policy areas and six Covid-19 statistics."),
                            h5("The policy areas include:"),
                            tags$div(tags$ul(
                              tags$li("Policy Area 1: Containment and Closure Policies"),
@@ -79,12 +77,12 @@ dashboardPage(
                                tags$li("6. Orders to shelter-in-place and otherwise confine to the home"),
                                tags$li("7. Restrictions on internal movement between cities/regions"),
                                tags$li("8. Restrictions on international travel for foreign travelers"))
-                             ),
+                             ),br(),
                              tags$li("Policy Area 2: Economic Policies"),
                              tags$div(tags$ul(
                                tags$li("1. If the government is providing direct cash payments to people who lose their jobs or cannot work (Note: only includes payments to firms if explicitly linked to payroll/salaries)"),
                                tags$li("2. If the government is freezing financial obligations for households (eg stopping loan repayments, preventing services like water from stopping, or banning evictions)"))
-                             ),
+                             ),br(),
                              
                              tags$li("Policy Area 3: Health System Policies"),
                              tags$div(tags$ul(
@@ -93,7 +91,7 @@ dashboardPage(
                                 tags$li("3. Government policy on contact tracing after a positive diagnosis (Note: we are looking for policies that would identify all people potentially exposed to Covid-19; voluntary bluetooth apps are unlikely to achieve this)"),
                                 tags$li("4. Announced short term spending on healthcare system, eg hospitals, masks, etc. Note: only record amount additional to previously announced spending"),
                                 tags$li("5. Announced public spending on Covid-19 vaccine development Note: only record amount additional to previously announced spending"))
-                               )
+                               ),br(),
 
                            )),
                            
@@ -105,7 +103,7 @@ dashboardPage(
                              tags$li("4. Mortality Rate: Number recorded deaths * 100/ Number confirmed cases"),
                              tags$li("5. Testing Rate: Total test results (positive + negative) per 100,000 persons"),
                              tags$li("6. Hospitalization Rate: Total number hospitalized / Number cases"))
-                           ),
+                           ),br(),
                            h4("Data Quality"),
                            h5(""),
                            h5("There are some potential data collection biases for Covid-19 statistics data collection, as there could be under-ascertainment of mild cases and time lags."),
@@ -138,6 +136,7 @@ dashboardPage(
             h3("Interactive State Level Map"),
             h5("This map tracks the Covid-19 statistics and policy levels of each state of US."),
             h5("A darker color means more cases, deaths, or stricter policy levels were implemented relative to other states on that day. If you click on the 'play' button on the left, you could see the evolution of the covid-19 situation in every 3 days."),
+            h5("Note that testing rate and hospitalization rate information is only available starting from April 12, 2020."),
             h5("Let's get started by selecting a input date!"),
             tags$div(id='my_div',
                      class='my_class',
@@ -161,7 +160,8 @@ dashboardPage(
     
     tabItem(tabName = "County_Level_Map",
             h3("Interactive County Level Map"),
-            h5("This map gives a closer look at situations of counties in each state. Note that no policy information is displayed since policies are defined at the state level. You can select as many states as you like and find how it is going in the counties. In this map, we exclude the policies measures as they are only available at state level."),
+            h5("This map gives a closer look at situations of counties in each state."),
+            h5("You can select as many states as you like and find how it is going in the counties. In this map, we exclude the policies measures, testing rates, and hospitalization rates as they are only available at the state level."),
             h5("Let's get started by selecting a input date!"),
             
             tags$div(id='my_div1',

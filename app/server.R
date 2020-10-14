@@ -1,21 +1,19 @@
-packages.used <- c("shiny","leaflet", "wordcloud2", "DT", "stringr", "dplyr", "tidyverse", "tibble","RColorBrewer")
+packages.used <- c("shiny","leaflet", "stringr", "dplyr", "tidyverse", "tibble","RColorBrewer")
 packages.needed <- setdiff(packages.used, intersect(installed.packages()[,1], packages.used))
 if(length(packages.needed) > 0)
 {
   install.packages(packages.needed, dependencies = TRUE)
 }
 
-
 library(shiny)
 library(leaflet)
 library(readr)
-library(wordcloud2)
-library(DT)
 library(stringr)
 library(tidyverse)
 library(dplyr)
 library(tibble)
 library(RColorBrewer)
+
 
 #---------------------------------------Loading the processed data---------------------------------------------
 load('./output/states_complete.RData')
