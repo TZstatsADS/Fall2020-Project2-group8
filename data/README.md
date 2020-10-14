@@ -6,4 +6,4 @@ The JHU dataset contains information about COVID statistics for each state and c
 
 The Oxford dataset contains information about COVID policies enforced for each state.
 
-The gz_2010_us_040_00_20m.json and gz_2010_us_050_00_20m.json contain data for plotting a map of the United States.
+The gz_2010_us_040_00_20m.json and gz_2010_us_050_00_20m.json files contain data for plotting a map of the United States.
