@@ -55,10 +55,10 @@ dashboardPage(
                              tags$li("1. How did policy stringency change with the evolving situation?"),
                              tags$li("2. How Covid-19 statistics change after policy stringency change?")
                            )))),
-              fluidRow(box(width = 15, title = "User Guide", status = "primary",
+              fluidRow(box(width = 15, title = "App Contents", status = "primary",
                            solidHeader = TRUE, h3("What Does This App Include?"),
                            tags$div(tags$ul(
-                             tags$li("Interactive Map: This map contains 2 U.S. geological graph, one at state level and another at county level. Each graph records the confirmed cases and death. User can select the state, the Covid-19 Statistics and time point"),
+                             tags$li("Interactive Map: This map contains 2 U.S. geological graphs, one at state level and another at county level. Each graph records the confirmed cases and deaths. User can select the state, Covid-19 Statistics, and time point"),
                              tags$li("Interactive Trend Plots : This tab contains time series plot on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. User can select up to 3 states/counties at one time."),
                              tags$li("Reference: This tab provides details on what dataset we use, how we processed our data and our project code.")
                              
@@ -66,7 +66,7 @@ dashboardPage(
               fluidRow(box(width = 15, title = "Policies and Covid-19 statistics", status = "primary",
                            solidHeader = TRUE, h3("What Policies and Covid-19 Statistics Are Included?"),
                            h4("Data Description"),
-                           h5("In this project, we used JHU datasets and OxCGRT dataset (details in the Reference tab). We have 3 main policy areas and 6 Covid-19 Statistics"),
+                           h5("In this project, we used JHU datasets and OxCGRT dataset (details in the Reference tab). We have three main policy areas and six Covid-19 Statistics"),
                            h5("The policy areas include:"),
                            tags$div(tags$ul(
                              tags$li("Policy Area 1: Containment and Closure Policies"),
@@ -97,7 +97,7 @@ dashboardPage(
 
                            )),
                            
-                           h5("Covid-19 Statistics include:"),
+                           h5("The Covid-19 Statistics include:"),
                            tags$div(tags$ul(
                              tags$li("1. Total Confirmed Cases"),
                              tags$li("2. Total Number of Death"),
