@@ -21,7 +21,8 @@ The **learning goals** for this project is:
 Term: Fall 2020
 
 + Group 8
-+ **Projec title**: + Team members
++ **Projec title**: Covid-19 Policy Tracker
++ **Team members**:
 	+ Zihan Chen
 	+ Rohan Uppuluri
 	+ Jiaqi Yuan
