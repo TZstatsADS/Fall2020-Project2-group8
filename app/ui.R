@@ -106,9 +106,9 @@ dashboardPage(
                              tags$li("5. Testing Rate: Total test results (positive + negative) per 100,000 persons"),
                              tags$li("6. Hospitalization Rate: Total number hospitalized / Number cases"))
                            ),
-                           h4("About Dataset & Data Quality"),
+                           h4("Data Quality"),
                            h5(""),
-                           h5("There are also some potential data collection biases for Covid-19 statistics data collection, as there could be under-ascertainment of mild cases and time lags."),
+                           h5("There are some potential data collection biases for Covid-19 statistics data collection, as there could be under-ascertainment of mild cases and time lags."),
                            h5("There are some limitations of our dataset, including:"),
                            tags$div(tags$ul(
                              tags$li("1. Missing values: Hospitalization rate and testing rate are only available starting on 04/12/20 at state level."),
