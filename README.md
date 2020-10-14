@@ -17,11 +17,11 @@ The **learning goals** for this project is:
 
 *The above general statement about project 2 can be removed once you are finished with your project. It is optional.
 
-## Project: US Covid-19 Policy Tracker
+## Project: U.S. Covid-19 Policy Tracker
 Term: Fall 2020
 
 + Group 8
-+ **US Covid-19 Policy Tracker**: Presented by:
++ **U.S. Covid-19 Policy Tracker**: Presented by:
 	+ Zihan Chen
 	+ Rohan Uppuluri
 	+ Jiaqi Yuan
