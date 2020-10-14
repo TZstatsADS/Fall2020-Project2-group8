@@ -59,7 +59,7 @@ dashboardPage(
                            tags$div(tags$ul(
                              tags$li("Interactive Map: This map contains two U.S. geological graphs, one at state level and another at county level. Each graph records the confirmed cases and deaths. The user can select the state, Covid-19 Statistics, and time point"),
                              tags$li("Interactive Trend Plots : This tab contains time series plots on when did each state/county’s enforced new policies and how key Covid-19 measures changes overtime. The user can select up to three states/counties at one time."),
-                             tags$li("Reference: This tab provides details on what dataset we use, how we processed our data and our project code.")
+                             tags$li("Reference: This tab provides details on what datasets we used and our project code.")
                              
                            )))),
               fluidRow(box(width = 15, title = "Policies and Covid-19 statistics", status = "primary",
@@ -248,7 +248,7 @@ dashboardPage(
                     ".",
                     "We used", 
                     tags$a(href="https://eric.clst.org/tech/usgeojson/", "geojson data"),
-                    "for the United States to draw US map and State map.",br(),br(),
+                    "to plot the U.S. geographic map, which we used in the state map and county map.",br(),br(),
                     "We used the JHU datasets(csse_covid_19_daily_reports_us & time_series_covid19_confirmed_US.csv) and OxCGRT(OxCGRT_US_latest.csv) to construct our dataset. The JHU datasets contain information on the Covid-19 statistics from sources like the U.S. Centers for Disease Control and Prevention, which have a set of consistent standards for working with state and local health departments to get data. The OxCGRT systematically collects publicly available information on several different common policy responses governments have taken, records these policies on a scale to reflect the extent of government action, and aggregates these scores into a suite of policy indices."
                     )),
               fluidRow(
