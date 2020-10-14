@@ -141,7 +141,7 @@ dashboardPage(
             h5("Let's get started by selecting a input date!"),
             tags$div(id='my_div',
                      class='my_class',
-                     selectInput(inputId='stats_dropdown',label='Select Covid-19 Statistics',
+                     selectInput(inputId='stats_dropdown',label='Select Covid-19 Statistics or Policy',
                                  choices=c('Cases','Deaths','C1_School_closing','C2_Workplace_closing','C3_Cancel_public_events','C4_Restrictions_on_gatherings','C5_Close_public_transport',
                                            'C6_Stay_at_home_requirements','C7_Restrictions_on_internal_movement','C8_International_travel_controls','E1_Income_support','E2_Debt_contract_relief',
                                            'H1_Public_information_campaigns','H2_Testing_policy','H3_Contact_tracing'))),
@@ -161,7 +161,7 @@ dashboardPage(
     
     tabItem(tabName = "County_Level_Map",
             h3("Interactive County Level Map"),
-            h5("This map gives a closer look at situations of counties in each state. Note that no policy information is displayed since policies are defined at the state level. You can select as many states as you like and find how it is going in the counties."),
+            h5("This map gives a closer look at situations of counties in each state. Note that no policy information is displayed since policies are defined at the state level. You can select as many states as you like and find how it is going in the counties. In this map, we exclude the policies measures as they are only available at state level."),
             h5("Let's get started by selecting a input date!"),
             
             tags$div(id='my_div1',
