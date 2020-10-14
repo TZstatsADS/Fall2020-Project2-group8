@@ -25,7 +25,7 @@ load('./output/county_complete.RData')
 
 dashboardPage(
   skin = "blue", 
-  dashboardHeader(title = "Covid State Policy Tracker"),
+  dashboardHeader(title = span("U.S. Covid-19 Policy Tracker",style="font-size: 16px")),
   dashboardSidebar(sidebarMenu(
     menuItem("Home", tabName = "Home", icon = icon("dashboard")),
     menuItem("Interactive Map", tabName = "Interactive Map", icon = icon("compass"),startExpanded = TRUE,
@@ -43,7 +43,7 @@ dashboardPage(
             fluidPage(
               fluidRow(
                 box(width = 15, title = "Introduction", status = "primary",
-                    solidHeader = TRUE, h3("Covid State Policy Tracker"),
+                    solidHeader = TRUE, h3("U.S. Covid-19 Policy Tracker"),
                     h4("By Zihan Chen, Xujie Ma, Rohan Uppuluri & Jiaqi Yuan"),
                     h5("Covid-19 outbreaks affect every country in the world. However, the magnitude of the impact varied among countries, as some countries have been successful in limiting the spreading of disease. There are many explanations of why some countries have fewer cases than others. One of them is that the government policy response."),
                     h5("In this project, we built a policy tracker to explore the interaction of state government policy response and Covid-19 statistics overtime (from 01/22/20 to 10/12/20). In particular, we want to see how some key Covid-19 statistics (confirmed cases, death, infection rate, mortality rate, positive test rate, hospitalization rate) change overtime and how the state governments are publishing corresponding containment and closure policies, health system policies, and economic policies."))),
