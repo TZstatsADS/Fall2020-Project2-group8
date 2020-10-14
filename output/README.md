@@ -1,4 +1,4 @@
-# Project 2: Shiny App Development
+# U.S. Covid-19 Policy Tracker
 
 ### Output folder
 
