@@ -5,6 +5,6 @@ account: rku2101
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2987624
-bundleId: 3731153
+bundleId: 3736271
 url: https://rku2101.shinyapps.io/covid-policy/
-when: 1602524909.27432
+when: 1602618553.28023

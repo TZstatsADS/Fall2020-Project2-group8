@@ -32,11 +32,11 @@ H3_Contact_tracing<-read_csv('./output/H3_Contact_tracing.csv')
 date_choices <- names(Confirmed)[-1]
 
 
-confirmed_county_data<-read.csv('./output/time_series_covid19_confirmed_US.csv')
-deaths_county_data<-read.csv('./output/time_series_covid19_deaths_US.csv')
+confirmed_county_data<-read_csv('./output/time_series_covid19_confirmed_US.csv')
+deaths_county_data<-read_csv('./output/time_series_covid19_deaths_US.csv')
 
-names(confirmed_county_data) <- c(names(confirmed_county_data)[1:11],date_choices[1:260])
-names(deaths_county_data) <- c(names(deaths_county_data)[1:12],date_choices[1:260])
+names(confirmed_county_data) <- c(names(confirmed_county_data)[1:11],date_choices[1:length((date_choices))])
+names(deaths_county_data) <- c(names(deaths_county_data)[1:12],date_choices[1:length((date_choices))])
 
 cdata_temp<-left_join(confirmed_county_data,data.frame(states),by=c('Province_State'='NAME'),keep=TRUE)
 ddata_temp<-left_join(deaths_county_data,data.frame(states),by=c('Province_State'='NAME'),keep=TRUE)

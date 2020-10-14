@@ -281,17 +281,12 @@ shinyServer(function(input,output, session){
     
     
   })
-  
-  
-  
 
-  
   #map end --------------------------------------------------------------------------------------------------------
   
   
   #report --------------------------------------------------------------------------------------------------------
   
-  #input$state_dropdown and input$policy_dropdown will give the values that the user inputted for the plot
   d_state <- reactive({
     req(input$state_dropdown) #don't display plot if nothing is selected
     
@@ -299,10 +294,9 @@ shinyServer(function(input,output, session){
       filter(State%in%input$state_dropdown)%>%
       mutate(State_Policy=paste(State,get(input$policy_dropdown),sep=": "))%>%
       mutate(State_Policy=factor(State_Policy))
-    levels(filtered$State_Policy)<-levels(filtered$State_Policy)[order(levels(filtered$State_Policy))]
     
     policy_lengths<-rle(unlist(map(strsplit(levels(filtered$State_Policy),'[:]'),1)))$lengths
-    policy_lengths<-append(policy_lengths,rep(3,3-length(policy_lengths))) #if num states < 3, fill rest of vector with 3s (minimum number of colors for a palette)
+    policy_lengths<-append(policy_lengths,rep(3,3-length(policy_lengths)))
     custom_colors<-c(brewer.pal(name="Blues",n=policy_lengths[1]),brewer.pal(name="Greens",n=policy_lengths[2]),brewer.pal(name="Purples",n=policy_lengths[3]))
     
     return(list(filtered,custom_colors))
@@ -347,9 +341,6 @@ shinyServer(function(input,output, session){
                    scale_colour_manual(str_wrap(as.character(input$policy_dropdown),8),values=d_state()[[2]],drop=FALSE)+
                    labs(color=as.character(input$policy_dropdown))+
                    theme(legend.title = element_blank()),
-                   #theme(legend.title = element_text(size=9))+
-                   #guides(colour=guide_legend(title=str_wrap(as.character(input$policy_dropdown),8),title.vjust = 0.5,title.position = "top",title.hjust=30,nrow=2)),
-                   #theme(legend.title = element_text(size=10,hjust=30,margin = margin(l=30,r=10)),legend.title.align=1),
                  tooltip='text')%>%
       add_annotations(
         text = "Mortality Rate Over Time",
@@ -431,7 +422,7 @@ shinyServer(function(input,output, session){
     levels(filtered$County_Policy)<-levels(filtered$County_Policy)[order(levels(filtered$County_Policy))]
     
     policy_lengths<-rle(unlist(map(strsplit(levels(filtered$County_Policy),'[:]'),1)))$lengths
-    policy_lengths<-append(policy_lengths,rep(3,3-length(policy_lengths))) #if num states < 3, fill rest of vector with 3s (minimum number of colors for a palette)
+    policy_lengths<-append(policy_lengths,rep(3,3-length(policy_lengths)))
     custom_colors<-c(brewer.pal(name="Blues",n=policy_lengths[1]),brewer.pal(name="Greens",n=policy_lengths[2]),brewer.pal(name="Purples",n=policy_lengths[3]))
     
     return(list(filtered,custom_colors))

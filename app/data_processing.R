@@ -55,7 +55,7 @@ state_lat_long<-states_covid_stats%>%
 
 #convert the confirmed US cases time series csv from wide to long
 #only keep the records before April 12 since we already have the JHU U.S. reports for April 12th till today
-US_confirmed<-read_csv('../data/JHU Data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv')
+US_confirmed<-read_csv('../data/JHU Data/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv')
 date_list<-lapply(colnames(US_confirmed)[12:length(colnames(US_confirmed))],mdy)
 date_numeric<-as.numeric(unlist(do.call(c,date_list)))
 colnames(US_confirmed)[12:length(colnames(US_confirmed))]<-date_numeric
@@ -66,13 +66,13 @@ US_confirmed<-pivot_longer(US_confirmed,cols=as.character(date_numeric[1]:date_n
 
 #totals for each state i.e. collapse counties
 US_confirmed_states<-US_confirmed%>%
-  filter(Date<'2020-04-12')%>%
+  filter(Date<'2020-04-12' & !is.na(Date))%>%
   arrange(State)%>%
   group_by(State,Date)%>%
   summarise(Confirmed=sum(Confirmed))
 
 #convert the confirmed US deaths time series csv from wide to long
-US_deaths<-read_csv('../data/JHU Data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
+US_deaths<-read_csv('../data/JHU Data/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
 date_list<-lapply(colnames(US_deaths)[13:length(colnames(US_deaths))],mdy)
 date_numeric<-as.numeric(unlist(do.call(c,date_list)))
 colnames(US_deaths)[13:length(colnames(US_deaths))]<-date_numeric
@@ -83,7 +83,7 @@ US_deaths<-pivot_longer(US_deaths,cols=as.character(date_numeric[1]:date_numeric
 
 #totals for each state i.e. collapse counties
 US_deaths_states<-US_deaths%>%
-  filter(Date<'2020-04-12')%>%
+  filter(Date<'2020-04-12' & !is.na(Date))%>%
   arrange(State)%>%
   group_by(State,Date)%>%
   summarise(Deaths=sum(Deaths),Population=sum(Population))
