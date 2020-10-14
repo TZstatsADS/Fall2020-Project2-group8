@@ -17,7 +17,7 @@ The **learning goals** for this project is:
 
 *The above general statement about project 2 can be removed once you are finished with your project. It is optional.
 
-## Project Title Covid State Policy Tracker
+## Covid-19 Policy Tracker
 Term: Fall 2020
 
 + Group 8
