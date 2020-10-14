@@ -17,10 +17,10 @@ The **learning goals** for this project is:
 
 *The above general statement about project 2 can be removed once you are finished with your project. It is optional.
 
-## Project Title Lorem ipsum dolor sit amet
+## Project Title Covid State Policy Tracker
 Term: Fall 2020
 
-+ Team #
++ Group 8
 + **Projec title**: + Team members
 	+ Zihan Chen
 	+ Rohan Uppuluri
