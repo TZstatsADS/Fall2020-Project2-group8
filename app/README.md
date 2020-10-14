@@ -1,4 +1,4 @@
-# Project 2: Shiny App Development
+# U.S. Covid-19 Policy Tracker
 
 The App directory contains the app files for the Shiny App (ui.R, server.R and global.R).
  - ui.R and server.R are two key components for the Shiny App:     
