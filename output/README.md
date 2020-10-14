@@ -2,5 +2,4 @@
 
 ### Output folder
 
-The output directory contains analysis output, processed datasets, logs, or other processed things.
-
+The output directory contains processed datasets including daily covid-19 statistics for states and counties as well as policies in different areas of each state.
