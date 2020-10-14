@@ -89,9 +89,7 @@ dashboardPage(
                              tags$div(tags$ul(
                                 tags$li("1. Presence of public info campaigns"),
                                 tags$li("2. Government policy on who has access to testing (Note: this records policies about testing for current infection (PCR tests) not testing for immunity (antibody test))"),
-                                tags$li("3. Government policy on contact tracing after a positive diagnosis (Note: we are looking for policies that would identify all people potentially exposed to Covid-19; voluntary bluetooth apps are unlikely to achieve this)"),
-                                tags$li("4. Announced short term spending on healthcare system, eg hospitals, masks, etc. Note: only record amount additional to previously announced spending"),
-                                tags$li("5. Announced public spending on Covid-19 vaccine development Note: only record amount additional to previously announced spending"))
+                                tags$li("3. Government policy on contact tracing after a positive diagnosis (Note: we are looking for policies that would identify all people potentially exposed to Covid-19; voluntary bluetooth apps are unlikely to achieve this)"))
                                ),br(),
 
                            )),
